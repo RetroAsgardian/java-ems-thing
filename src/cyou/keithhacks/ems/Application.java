@@ -20,6 +20,9 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
+import cyou.keithhacks.ems.database.RecordSpec;
+import cyou.keithhacks.ems.database.Employee;
+
 public class Application extends JFrame {
 	private static final long serialVersionUID = -2429084325927720912L;
 	

@@ -42,7 +42,7 @@ public class RecordSpec {
 	 */
 	protected String primaryKey;
 	
-	public RecordSpec(Class<Record> recordClass) {
+	public RecordSpec(Class<? extends Record> recordClass) {
 		fields = new HashMap<String, FieldSpec>();
 		
 		for (Field field : recordClass.getDeclaredFields()) {
