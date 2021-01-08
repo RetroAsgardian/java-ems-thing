@@ -4,6 +4,10 @@ import java.util.Random;
 
 import cyou.keithhacks.ems.collections.OpenBTreeHashTable;
 
+/**
+ * @author Keith
+ * @deprecated ignore this class
+ */
 public class DataThingy {
 	
 	public OpenBTreeHashTable<Integer, EmployeeInfo> employees;

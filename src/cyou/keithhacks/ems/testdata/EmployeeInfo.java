@@ -1,5 +1,10 @@
 package cyou.keithhacks.ems.testdata;
 
+/**
+ * 
+ * @author Keith
+ * @deprecated Ignore this class
+ */
 public class EmployeeInfo {
 	
 	protected int id;
