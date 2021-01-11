@@ -12,6 +12,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -64,13 +65,22 @@ public class Application extends JFrame {
 		menuBar = new JMenuBar();
 		
 		applicationMenu = (JMenu) menuBar.add(new JMenu("Application"));
-		JMenuItem newWindow = new JMenuItem("New Window");
-		newWindow.addActionListener(new ActionListener() {
+		
+		JMenuItem help = new JMenuItem("Help...");
+		help.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addWindow(new TestWindow());
+				addWindow(new HelpWindow());
 			}
 		});
-		applicationMenu.add(newWindow);
+		applicationMenu.add(help);
+		JMenuItem about = new JMenuItem("About...");
+		about.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addWindow(new AboutWindow(), true);
+			}
+		});
+		applicationMenu.add(about);
+		applicationMenu.addSeparator();
 		
 		lookAndFeelMenu = new JMenu("Set Look and Feel");
 		buildLookAndFeelMenu();
@@ -87,10 +97,11 @@ public class Application extends JFrame {
 		windowsMenu = (JMenu) menuBar.add(new JMenu("Windows"));
 		buildWindowsMenu();
 		
+		
 		this.setJMenuBar(menuBar);
 		
 		// Open main window
-		addWindow(new MainWindow());
+		addWindow(new OldMainWindow());
 	}
 	
 	void buildLookAndFeelMenu() {
@@ -194,7 +205,7 @@ public class Application extends JFrame {
 		}
 	}
 	
-	public long addWindow(JInternalFrame window) {
+	public long addWindow(JInternalFrame window, boolean isDialog) {
 		int windowID = window.hashCode();
 		
 		// register window
@@ -204,7 +215,7 @@ public class Application extends JFrame {
 		// make sure removeWindow() is called, among other things
 		window.addInternalFrameListener(new InternalFrameAdapter() {
 			public void internalFrameClosed(InternalFrameEvent e) {
-				removeWindow(windowID);
+				removeWindow(windowID, isDialog);
 			}
 			public void internalFrameIconified(InternalFrameEvent e) {
 				buildWindowsMenu();
@@ -222,14 +233,28 @@ public class Application extends JFrame {
 			}
 		});
 		
-		soundEffects.play(soundEffects.open);
+		soundEffects.play(isDialog ? soundEffects.dialogOpen : soundEffects.open);
+
+		try {
+			JInternalFrame oldWindow = desktop.getSelectedFrame();
+			if (oldWindow != null)
+				oldWindow.setSelected(false);
+			desktop.setSelectedFrame(window);
+			window.setSelected(true);
+		} catch (PropertyVetoException e) {
+			e.printStackTrace();
+		}
 		
 		buildWindowsMenu();
 		
 		return windowID;
 	}
 	
-	public void removeWindow(int windowID) {
+	public long addWindow(JInternalFrame window) {
+		return addWindow(window, false);
+	}
+	
+	public void removeWindow(int windowID, boolean isDialog) {
 		JInternalFrame window = windows.get(Integer.valueOf(windowID));
 		if (window == null)
 			return;
@@ -237,9 +262,13 @@ public class Application extends JFrame {
 		windows.remove(Integer.valueOf(windowID));
 		desktop.remove(window);
 		
-		soundEffects.play(soundEffects.close);
+		soundEffects.play(isDialog ? soundEffects.dialogClose : soundEffects.close);
 		
 		buildWindowsMenu();
+	}
+	
+	public void removeWindow(int windowID) {
+		removeWindow(windowID, false);
 	}
 	
 	public static void main(String[] args) {
@@ -265,6 +294,8 @@ public class Application extends JFrame {
 				e.printStackTrace();
 			}
 		}
+		
+		LookAndFeel laf = UIManager.getLookAndFeel();
 		
 		@SuppressWarnings("unused")
 		Application app = new Application();

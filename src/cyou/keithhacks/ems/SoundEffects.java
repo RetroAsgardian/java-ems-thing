@@ -31,7 +31,7 @@ public class SoundEffects {
 			
 			int offset = 0;
 			try {
-				while (audio.available() > 0) {
+				while (offset < buffer.length) {
 					offset += audio.read(buffer, offset, buffer.length - offset);
 				}
 			} catch (IOException e) {
