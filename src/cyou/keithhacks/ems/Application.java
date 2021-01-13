@@ -69,7 +69,14 @@ public class Application extends JFrame {
 		JMenuItem help = new JMenuItem("Help...");
 		help.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addWindow(new HelpWindow());
+				JInternalFrame win = desktop.getSelectedFrame();
+				if (win.isIcon())
+					win = null;
+				
+				if (win instanceof MainWindow)
+					addWindow(new HelpWindow("MainWindow.htm"));
+				else
+					addWindow(new HelpWindow());
 			}
 		});
 		applicationMenu.add(help);
@@ -101,7 +108,8 @@ public class Application extends JFrame {
 		this.setJMenuBar(menuBar);
 		
 		// Open main window
-		addWindow(new OldMainWindow());
+		// addWindow(new OldMainWindow());
+		addWindow(new MainWindow());
 	}
 	
 	void buildLookAndFeelMenu() {

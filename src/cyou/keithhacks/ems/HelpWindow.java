@@ -42,16 +42,7 @@ public class HelpWindow extends JInternalFrame {
 	}
 	
 	public HelpWindow() {
-		super("Help", true, true, true, true);
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		
-		build();
-		
-		updateDocument(getClass().getClassLoader().getResource("cyou/keithhacks/ems/help/Welcome.htm"));
-		
-		this.pack();
-		this.setSize(600, 400);
-		this.setVisible(true);
+		this("Welcome.htm");
 	}
 	
 	JTree topics;
