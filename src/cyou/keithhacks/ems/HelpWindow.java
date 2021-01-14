@@ -10,9 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,9 +25,12 @@ import org.xml.sax.SAXException;
 public class HelpWindow extends JInternalFrame {
 
 	private static final long serialVersionUID = 6121276283616556408L;
+	
+	Application app;
 
-	public HelpWindow(String helpDoc) {
+	public HelpWindow(Application app, String helpDoc) {
 		super("Help", true, true, true, true);
+		this.app = app;
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		build();
@@ -41,8 +42,8 @@ public class HelpWindow extends JInternalFrame {
 		this.setVisible(true);
 	}
 	
-	public HelpWindow() {
-		this("Welcome.htm");
+	public HelpWindow(Application app) {
+		this(app, "Welcome.htm");
 	}
 	
 	JTree topics;
@@ -55,28 +56,24 @@ public class HelpWindow extends JInternalFrame {
 		buildTopics();
 		splitPane.add(new JScrollPane(topics));
 		
-		topics.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) topics.getLastSelectedPathComponent();
-				if (node == null)
-					return;
-				Topic topic = (Topic) node.getUserObject();
-				if ("".equals(topic.file))
-					return;
-				
-				updateDocument(getClass().getClassLoader().getResource("cyou/keithhacks/ems/help/"+topic.file));
-			}
+		topics.addTreeSelectionListener((TreeSelectionEvent e) -> {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) topics.getLastSelectedPathComponent();
+			if (node == null)
+				return;
+			Topic topic = (Topic) node.getUserObject();
+			if ("".equals(topic.file))
+				return;
+			
+			updateDocument(getClass().getClassLoader().getResource("cyou/keithhacks/ems/help/"+topic.file));
 		});
 		
 		contentPane = new JEditorPane();
 		contentPane.setContentType("text/html");
 		contentPane.setEditable(false);
 		
-		contentPane.addHyperlinkListener(new HyperlinkListener() {
-			public void hyperlinkUpdate(HyperlinkEvent e) {
-				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					updateDocument(e.getURL());
-				}
+		contentPane.addHyperlinkListener((HyperlinkEvent e) -> {
+			if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+				updateDocument(e.getURL());
 			}
 		});
 		

@@ -1,7 +1,6 @@
 package cyou.keithhacks.ems;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.util.Hashtable;
 
@@ -12,7 +11,6 @@ import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -20,9 +18,6 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-
-import cyou.keithhacks.ems.database.RecordSpec;
-import cyou.keithhacks.ems.database.Employee;
 
 public class Application extends JFrame {
 	private static final long serialVersionUID = -2429084325927720912L;
@@ -67,24 +62,20 @@ public class Application extends JFrame {
 		applicationMenu = (JMenu) menuBar.add(new JMenu("Application"));
 		
 		JMenuItem help = new JMenuItem("Help...");
-		help.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JInternalFrame win = desktop.getSelectedFrame();
-				if (win.isIcon())
-					win = null;
-				
-				if (win instanceof MainWindow)
-					addWindow(new HelpWindow("MainWindow.htm"));
-				else
-					addWindow(new HelpWindow());
-			}
+		help.addActionListener((ActionEvent e) -> {
+			JInternalFrame win = desktop.getSelectedFrame();
+			if (win.isIcon())
+				win = null;
+			
+			if (win instanceof MainWindow)
+				addWindow(new HelpWindow(this, "MainWindow.htm"));
+			else
+				addWindow(new HelpWindow(this));
 		});
 		applicationMenu.add(help);
 		JMenuItem about = new JMenuItem("About...");
-		about.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addWindow(new AboutWindow(), true);
-			}
+		about.addActionListener((ActionEvent e) -> {
+			addWindow(new AboutWindow(), true);
 		});
 		applicationMenu.add(about);
 		applicationMenu.addSeparator();
@@ -94,10 +85,8 @@ public class Application extends JFrame {
 		applicationMenu.add(lookAndFeelMenu);
 		
 		JMenuItem quit = new JMenuItem("Quit");
-		quit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
+		quit.addActionListener((ActionEvent e) -> {
+			dispose();
 		});
 		applicationMenu.add(quit);
 		
@@ -109,7 +98,7 @@ public class Application extends JFrame {
 		
 		// Open main window
 		// addWindow(new OldMainWindow());
-		addWindow(new MainWindow());
+		addWindow(new MainWindow(this));
 	}
 	
 	void buildLookAndFeelMenu() {
@@ -119,17 +108,14 @@ public class Application extends JFrame {
 			if (lafInfo.getClassName().equals(UIManager.getLookAndFeel().getClass().getName())) {
 				menuItem.setState(true);
 			}
-			Application thisApp = this;
-			menuItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					try {
-						UIManager.setLookAndFeel(lafInfo.getClassName());
-						buildLookAndFeelMenu();
-						SwingUtilities.updateComponentTreeUI(thisApp);
-					} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-							| UnsupportedLookAndFeelException e1) {
-						e1.printStackTrace();
-					}
+			menuItem.addActionListener((ActionEvent e) -> {
+				try {
+					UIManager.setLookAndFeel(lafInfo.getClassName());
+					buildLookAndFeelMenu();
+					SwingUtilities.updateComponentTreeUI(this);
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+						| UnsupportedLookAndFeelException e1) {
+					e1.printStackTrace();
 				}
 			});
 			lookAndFeelMenu.add(menuItem);
@@ -157,55 +143,47 @@ public class Application extends JFrame {
 			
 			JMenuItem close = new JMenuItem("Close");
 			close.setEnabled(window.isClosable());
-			close.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					try {
-						window.setClosed(true);
-					} catch (PropertyVetoException e1) {
-						e1.printStackTrace();
-					}
+			close.addActionListener((ActionEvent e) -> {
+				try {
+					window.setClosed(true);
+				} catch (PropertyVetoException e1) {
+					e1.printStackTrace();
 				}
 			});
 			windowMenu.add(close);
 			
 			JMenuItem iconify = new JMenuItem(window.isIcon() ? "Restore" : "Iconify");
 			iconify.setEnabled(window.isIconifiable());
-			iconify.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					try {
-						window.setIcon(!window.isIcon());
-					} catch (PropertyVetoException e1) {
-						e1.printStackTrace();
-					}
+			iconify.addActionListener((ActionEvent e) -> {
+				try {
+					window.setIcon(!window.isIcon());
+				} catch (PropertyVetoException e1) {
+					e1.printStackTrace();
 				}
 			});
 			windowMenu.add(iconify);
 			
 			JMenuItem focus = new JMenuItem("Focus");
-			focus.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					try {
-						JInternalFrame oldWindow = desktop.getSelectedFrame();
-						if (oldWindow != null)
-							oldWindow.setSelected(false);
-						desktop.setSelectedFrame(window);
-						window.setSelected(true);
-					} catch (PropertyVetoException e1) {
-						e1.printStackTrace();
-					}
+			focus.addActionListener((ActionEvent e) -> {
+				try {
+					JInternalFrame oldWindow = desktop.getSelectedFrame();
+					if (oldWindow != null)
+						oldWindow.setSelected(false);
+					desktop.setSelectedFrame(window);
+					window.setSelected(true);
+				} catch (PropertyVetoException e1) {
+					e1.printStackTrace();
 				}
 			});
 			windowMenu.add(focus);
 			
 			JMenuItem raise = new JMenuItem(desktop.getComponentZOrder(window) == 0 ? "Lower" : "Raise");
-			raise.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if (desktop.getComponentZOrder(window) == 0)
-						window.toBack();
-					else
-						window.toFront();
-					buildWindowsMenu();
-				}
+			raise.addActionListener((ActionEvent e) -> {
+				if (desktop.getComponentZOrder(window) == 0)
+					window.toBack();
+				else
+					window.toFront();
+				buildWindowsMenu();
 			});
 			windowMenu.add(raise);
 			
@@ -302,8 +280,6 @@ public class Application extends JFrame {
 				e.printStackTrace();
 			}
 		}
-		
-		LookAndFeel laf = UIManager.getLookAndFeel();
 		
 		@SuppressWarnings("unused")
 		Application app = new Application();

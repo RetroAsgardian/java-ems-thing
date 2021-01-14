@@ -4,30 +4,39 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 public class MainWindow extends JInternalFrame {
 	
 	private static final long serialVersionUID = -8094233755987088018L;
+	
+	Application app;
 
-	public MainWindow() {
+	public MainWindow(Application app) {
 		super("Employee Management System", true, false, true, true);
+		this.app = app;
+		
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		build();
 		
 		this.pack();
+		// HACK gotta do this to make the table not be 0 pixels tall
+		this.setSize(this.getSize().width, this.getSize().height + 120);
 		this.setMinimumSize(this.getSize());
 		this.setVisible(true);
 	}
 	
-	JButton newEmployeeBtn;
+	JButton addEmployeeBtn;
 	JButton findByIDBtn;
 	JButton searchBtn;
 	JButton showAllBtn;
@@ -46,8 +55,8 @@ public class MainWindow extends JInternalFrame {
 		con.weightx = 0.0;
 		con.weighty = 0.0;
 		
-		newEmployeeBtn = new JButton("New employee...");
-		this.add(newEmployeeBtn, con);
+		addEmployeeBtn = new JButton("Add employee...");
+		this.add(addEmployeeBtn, con);
 		
 		findByIDBtn = new JButton("Find by ID...");
 		this.add(findByIDBtn, con);
@@ -76,14 +85,36 @@ public class MainWindow extends JInternalFrame {
 	
 	JMenuBar menuBar;
 	JMenu fileMenu;
+	JMenu editMenu;
 	JMenu viewMenu;
 	JMenu columnsMenu;
 	
 	void buildMenuBar() {
 		menuBar = new JMenuBar();
+		this.setJMenuBar(menuBar);
 		
 		fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
+		
+		fileMenu.add(new JMenuItem("New"));
+		fileMenu.add(new JMenuItem("Open..."));
+		fileMenu.add(new JMenuItem("Save"));
+		
+		fileMenu.addSeparator();
+		
+		fileMenu.add(new JMenuItem("Export..."));
+		
+		editMenu = new JMenu("Edit");
+		menuBar.add(editMenu);
+		
+		editMenu.add(new JMenuItem("Undo"));
+		editMenu.add(new JMenuItem("Redo"));
+		editMenu.add(new JMenuItem("Changelog..."));
+		
+		editMenu.addSeparator();
+
+		editMenu.add(new JMenuItem("Add employee..."));
+		editMenu.add(new JMenuItem("Find by ID..."));
 		
 		viewMenu = new JMenu("View");
 		menuBar.add(viewMenu);
@@ -91,7 +122,39 @@ public class MainWindow extends JInternalFrame {
 		columnsMenu = new JMenu("Columns");
 		viewMenu.add(columnsMenu);
 		
-		this.setJMenuBar(menuBar);
+		buildColumnsMenu();
+		
+		viewMenu.addSeparator();
+		
+		viewMenu.add(new JMenuItem("Search..."));
+		viewMenu.add(new JMenuItem("Show all"));
+	}
+	
+	void buildColumnsMenu() {
+		columnsMenu.removeAll();
+
+		JCheckBoxMenuItem column;
+		
+		column = new JCheckBoxMenuItem("ID", true);
+		columnsMenu.add(column);
+		
+		column = new JCheckBoxMenuItem("First name", true);
+		columnsMenu.add(column);
+		
+		column = new JCheckBoxMenuItem("Last name", true);
+		columnsMenu.add(column);
+		
+		column = new JCheckBoxMenuItem("Gender", false);
+		columnsMenu.add(column);
+		
+		column = new JCheckBoxMenuItem("Location", true);
+		columnsMenu.add(column);
+		
+		column = new JCheckBoxMenuItem("Gross salary", true);
+		columnsMenu.add(column);
+		
+		column = new JCheckBoxMenuItem("Net salary", false);
+		columnsMenu.add(column);
 	}
 	
 }

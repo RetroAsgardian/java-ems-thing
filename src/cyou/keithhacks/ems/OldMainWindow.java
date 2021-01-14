@@ -102,6 +102,8 @@ public class OldMainWindow extends JInternalFrame {
 		con.gridwidth = GridBagConstraints.REMAINDER;
 		
 		table = new JTable(new AbstractTableModel() {
+			private static final long serialVersionUID = 4373931083773612806L;
+			
 			// FIXME this is a huge mess
 			ArrayList<Integer> keys = DataThingy.get().employees.keys();
 			public void fireTableDataChanged() {
