@@ -126,9 +126,6 @@ public class EmployeeManager {
 
     public FullTimeEmployee newFTEmployee() {
         int ID = this.generateID();
-        while (!this.checkVacantID(ID)) {
-            ID = this.generateID();
-        }
 
         try {
             FullTimeEmployee emp = newFTEmployee(ID);
@@ -149,9 +146,6 @@ public class EmployeeManager {
 
     public PartTimeEmployee newPTEmployee() {
         int ID = this.generateID();
-        while (!this.checkVacantID(ID)) {
-            ID = this.generateID();
-        }
 
         try {
             PartTimeEmployee emp = newPTEmployee(ID);
