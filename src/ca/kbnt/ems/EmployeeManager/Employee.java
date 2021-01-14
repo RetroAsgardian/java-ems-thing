@@ -17,7 +17,12 @@ public abstract class Employee implements HashTable.IHashable {
         Female,
         NonBinary,
         Other,
-        Unknown
+        Unknown,
+        No,
+        Maybe,
+        ProbablyNot,
+        Yes,
+        ReplyHazyTryAgain
     }
     //</editor-fold>
 

@@ -15,7 +15,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import ca.kbnt.ems.EmployeeManager.Employee;
+import ca.kbnt.ems.EmployeeManager.Employee.EmployeeData;
+import ca.kbnt.ems.EmployeeManager.Employee.Gender;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
+import ca.kbnt.ems.EmployeeManager.FullTimeEmployee;
 
 public class MainWindow extends JInternalFrame {
 	
@@ -31,7 +35,14 @@ public class MainWindow extends JInternalFrame {
 		
 		db = new EmployeeManager();
 		
-		db.newFTEmployee();
+		FullTimeEmployee emp = db.newFTEmployee();
+		EmployeeData data = emp.getData();
+		data.setFirstName("Firstname");
+		data.setLastName("Lastname");
+		data.setGender(Gender.No);
+		data.setDeductRate(0.2);
+		emp.setData(data);
+		
 		db.newFTEmployee();
 		db.newPTEmployee();
 		db.newPTEmployee();
@@ -72,7 +83,17 @@ public class MainWindow extends JInternalFrame {
 		findByIDBtn = new JButton("Find by ID...");
 		findByIDBtn.addActionListener((ActionEvent e) -> {
 			app.addWindow(new TextInputDialog(app, "Find by ID", "Enter the desired employee's ID: ", (String str) -> {
-				app.addWindow(new ActionDialog(app, "Debug", str, (ActionEvent e1) -> {}), true);
+				try {
+					int ID = Integer.parseInt(str);
+					Employee employee = db.getEmployee(ID);
+					
+					if (employee == null)
+						app.addWindow(new ActionDialog(app, "Error", "Employee not found", (ActionEvent e2) -> {}), true);
+					else
+						app.addWindow(new EmployeeWindow(app, db, employee));
+				} catch (NumberFormatException e1) {
+					app.addWindow(new ActionDialog(app, "Error", "Invalid ID", (ActionEvent e2) -> {}), true);
+				}
 			}), true);
 		});
 		this.add(findByIDBtn, con);

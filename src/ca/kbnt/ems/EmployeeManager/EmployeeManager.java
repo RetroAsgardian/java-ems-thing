@@ -149,7 +149,7 @@ public class EmployeeManager {
 
     public PartTimeEmployee newPTEmployee() {
         int ID = this.generateID();
-        while (this.checkVacantID(ID)) {
+        while (!this.checkVacantID(ID)) {
             ID = this.generateID();
         }
 
