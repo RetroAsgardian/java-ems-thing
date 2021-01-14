@@ -15,15 +15,26 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import ca.kbnt.ems.EmployeeManager.EmployeeManager;
+
 public class MainWindow extends JInternalFrame {
 	
 	private static final long serialVersionUID = -8094233755987088018L;
 	
 	Application app;
+	
+	EmployeeManager db;
 
 	public MainWindow(Application app) {
 		super("Employee Management System", true, false, true, true);
 		this.app = app;
+		
+		db = new EmployeeManager();
+		
+		db.newFTEmployee();
+		db.newFTEmployee();
+		db.newPTEmployee();
+		db.newPTEmployee();
 		
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
@@ -59,6 +70,11 @@ public class MainWindow extends JInternalFrame {
 		this.add(addEmployeeBtn, con);
 		
 		findByIDBtn = new JButton("Find by ID...");
+		findByIDBtn.addActionListener((ActionEvent e) -> {
+			app.addWindow(new TextInputDialog(app, "Find by ID", "Enter the desired employee's ID: ", (String str) -> {
+				app.addWindow(new ActionDialog(app, "Debug", str, (ActionEvent e1) -> {}), true);
+			}), true);
+		});
 		this.add(findByIDBtn, con);
 		
 		searchBtn = new JButton("Search...");
