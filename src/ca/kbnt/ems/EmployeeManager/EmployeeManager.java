@@ -126,7 +126,7 @@ public class EmployeeManager {
 
     public FullTimeEmployee newFTEmployee() {
         int ID = this.generateID();
-        while (this.checkVacantID(ID)) {
+        while (!this.checkVacantID(ID)) {
             ID = this.generateID();
         }
 
