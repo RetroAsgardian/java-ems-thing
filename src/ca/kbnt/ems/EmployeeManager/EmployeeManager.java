@@ -19,10 +19,7 @@ public class EmployeeManager {
     }
 
     public enum DataChangeOperation {
-        New,
-        Modified,
-        Removed,
-        ChangedDataType
+        New, Modified, Removed, ChangedDataType
     }
 
     public class DataChangedEvent {
@@ -72,7 +69,8 @@ public class EmployeeManager {
                     max = e.getID();
                 }
             } catch (HashTable.IDInUseError ex) {
-                Logger.getLogger(EmployeeManager.class.getName()).log(Level.WARNING, "Duplicate IDs Found when importing data", ex);
+                Logger.getLogger(EmployeeManager.class.getName()).log(Level.WARNING,
+                        "Duplicate IDs Found when importing data", ex);
             }
         }
         if (max > this.nextID) {
@@ -81,7 +79,11 @@ public class EmployeeManager {
     }
 
     public int generateID() {
-        return nextID++;
+        int ID = nextID;
+        while (!this.checkVacantID(ID)) {
+            ID++;
+        }
+        return ID;
     }
 
     public void addEmployee(Employee e) throws HashTable.IDInUseError {
@@ -126,9 +128,6 @@ public class EmployeeManager {
 
     public FullTimeEmployee newFTEmployee() {
         int ID = this.generateID();
-        while (!this.checkVacantID(ID)) {
-            ID = this.generateID();
-        }
 
         try {
             FullTimeEmployee emp = newFTEmployee(ID);
@@ -149,9 +148,6 @@ public class EmployeeManager {
 
     public PartTimeEmployee newPTEmployee() {
         int ID = this.generateID();
-        while (this.checkVacantID(ID)) {
-            ID = this.generateID();
-        }
 
         try {
             PartTimeEmployee emp = newPTEmployee(ID);
