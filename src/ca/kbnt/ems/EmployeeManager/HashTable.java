@@ -29,7 +29,7 @@ public class HashTable<T extends HashTable.IHashable> {
         this.buckets = new ArrayList<>(this.bucketCount);
 
         for (int i = 0; i < bucketCount; i++) {
-            this.buckets.set(i, new ArrayList<>());
+            this.buckets.add(i, new ArrayList<>());
         }
     }
 
