@@ -119,41 +119,21 @@ public class EmployeeManager {
         return !table.contains(ID);
     }
 
-    public FullTimeEmployee newFTEmployee(int ID) throws HashTable.IDInUseError {
-        FullTimeEmployee emp = new FullTimeEmployee(ID);
+    public Employee newEmployee(EmployeeData data) throws HashTable.IDInUseError {
+        Employee emp = new Employee(data);
         table.add(emp);
         this.notifyDataChangedListeners(new DataChangedEvent(emp, DataChangeOperation.New));
         return emp;
     }
 
-    public FullTimeEmployee newFTEmployee() {
+    public Employee newEmployee() {
         int ID = this.generateID();
 
         try {
-            FullTimeEmployee emp = newFTEmployee(ID);
+            Employee emp = newEmployee(new EmployeeData(ID));
             return emp;
         } catch (HashTable.IDInUseError ex) {
-            Logger.getLogger(EmployeeManager.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-
-    }
-
-    public PartTimeEmployee newPTEmployee(int ID) throws HashTable.IDInUseError {
-        PartTimeEmployee emp = new PartTimeEmployee(ID);
-        table.add(emp);
-        this.notifyDataChangedListeners(new DataChangedEvent(emp, DataChangeOperation.New));
-        return emp;
-    }
-
-    public PartTimeEmployee newPTEmployee() {
-        int ID = this.generateID();
-
-        try {
-            PartTimeEmployee emp = newPTEmployee(ID);
-            return emp;
-        } catch (HashTable.IDInUseError ex) {
-            Logger.getLogger(EmployeeManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EmployeeManager.class.getName()).log(Level.SEVERE, "Generated ID was not vacant!", ex);
             return null;
         }
 

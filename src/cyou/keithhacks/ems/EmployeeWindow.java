@@ -12,9 +12,9 @@ import ca.kbnt.ems.EmployeeManager.Employee;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
 
 public class EmployeeWindow extends JInternalFrame {
-	
+
 	private static final long serialVersionUID = 6509806823394837612L;
-	
+
 	protected Application app;
 	EmployeeManager db;
 	Employee employee;
@@ -26,9 +26,9 @@ public class EmployeeWindow extends JInternalFrame {
 		this.employee = employee;
 
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		
+
 		build();
-		
+
 		this.pack();
 		this.setMinimumSize(this.getSize());
 		this.setVisible(true);
@@ -58,5 +58,5 @@ public class EmployeeWindow extends JInternalFrame {
 		});
 		bottom.add(save);
 	}
-	
+
 }

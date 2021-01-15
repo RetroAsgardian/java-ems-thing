@@ -15,10 +15,10 @@ import javax.swing.event.DocumentListener;
 
 import ca.kbnt.ems.EmployeeManager.Employee;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
-import ca.kbnt.ems.EmployeeManager.Employee.EmployeeData;
-import ca.kbnt.ems.EmployeeManager.Employee.Gender;
-import ca.kbnt.ems.EmployeeManager.FullTimeEmployee.FTEmployeeData;
-import ca.kbnt.ems.EmployeeManager.PartTimeEmployee.PTEmployeeData;
+import ca.kbnt.ems.EmployeeManager.EmployeeData;
+import ca.kbnt.ems.EmployeeManager.EmployeeData.Gender;
+import ca.kbnt.ems.EmployeeManager.FTEmployeeData;
+import ca.kbnt.ems.EmployeeManager.PTEmployeeData;
 
 public class EmployeePane extends JPanel {
 	private static final long serialVersionUID = 7611825201239502843L;
