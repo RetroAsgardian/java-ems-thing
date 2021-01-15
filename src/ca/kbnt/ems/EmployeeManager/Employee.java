@@ -6,160 +6,170 @@ package ca.kbnt.ems.EmployeeManager;
  */
 public abstract class Employee implements HashTable.IHashable {
 
-    @Override
-    public int getID() {
-        return this.data.getID();
-    }
+	@Override
+	public int getID() {
+		return this.data.getID();
+	}
 
-    // <editor-fold desc="STATIC ATTRIBUTES">
-    public enum Gender {
-        Male,
-        Female,
-        NonBinary,
-        Other,
-        Unknown,
-        No,
-        Maybe,
-        ProbablyNot,
-        Yes,
-        ReplyHazyTryAgain
-    }
-    //</editor-fold>
+	// <editor-fold desc="STATIC ATTRIBUTES">
+	public enum Gender {
+		Male, Female, NonBinary, Other, Unknown, No, Maybe, ProbablyNot, Yes, ReplyHazyTryAgain
+	}
+	// </editor-fold>
 
-    // <editor-fold desc="ATTRIBUTES">
-    private EmployeeData data;
-    // </editor-fold>
+	// <editor-fold desc="ATTRIBUTES">
+	private EmployeeData data;
+	// </editor-fold>
 
-    // <editor-fold desc="CONSTRUCTORS">
-    public Employee(int ID, String firstName, String lastName, Gender gender, double deductionRate) {
-        data = new EmployeeData(ID, firstName, lastName, gender, deductionRate);
-    }
-    
-    public Employee(int ID) {
-        data = new EmployeeData(ID);
-    }
-    
-    public Employee(EmployeeData data) {
-        this.data = new EmployeeData(data);
-    }
-    // </editor-fold>
+	// <editor-fold desc="CONSTRUCTORS">
+	public Employee(int ID, String firstName, String lastName, Gender gender, double deductionRate, String location) {
+		data = new EmployeeData(ID, firstName, lastName, gender, deductionRate, location);
+	}
 
-    
-    public void setData(EmployeeData data) {
-        this.data = new EmployeeData(data);
-    }
-    
-    public EmployeeData getData() {
-        return new EmployeeData(this.data);
-    }
-    
-    public static class EmployeeData {
+	public Employee(int ID) {
+		data = new EmployeeData(ID);
+	}
 
-        protected final int ID;
-        protected String firstName;
-        protected String lastName;
-        protected Gender gender;
-        protected double deductRate; // e.g. 0.21 for 21%
-        
-//        public EmployeeData() {
-//            ID = 0;
-//        }
-        
-        public EmployeeData(int ID) {
-            this.ID = ID;
-            this.firstName = "";
-            this.lastName = "";
-            this.gender = Gender.Unknown;
-            this.deductRate = 0;
-        }
-        
-        public EmployeeData(int ID, String firstName, String lastName, Gender gender, double deductRate) {
-            this.ID = ID;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.gender = gender;
-            this.deductRate = deductRate;
-        }
+	public Employee(EmployeeData data) {
+		this.data = new EmployeeData(data);
+	}
+	// </editor-fold>
 
-        public EmployeeData(EmployeeData data) {
-            this.ID = data.ID;
-            this.firstName = data.firstName;
-            this.lastName = data.lastName;
-            this.gender = data.gender;
-            this.deductRate = data.deductRate;
-        }
+	public void setData(EmployeeData data) {
+		this.data = new EmployeeData(data);
+	}
 
-        // <editor-fold desc="GETTERS AND SETTERS">
-        /**
-         * @return the ID
-         */
-        public int getID() {
-            return ID;
-        }
+	public EmployeeData getData() {
+		return new EmployeeData(this.data);
+	}
 
-        /**
-         * @return the firstName
-         */
-        public String getFirstName() {
-            return firstName;
-        }
+	public static class EmployeeData {
 
-        /**
-         * @param firstName the firstName to set
-         */
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
+		protected final int ID;
+		protected String firstName;
+		protected String lastName;
+		protected Gender gender;
+		protected double deductRate; // e.g. 0.21 for 21%
+		protected String location;
 
-        /**
-         * @return the lastName
-         */
-        public String getLastName() {
-            return lastName;
-        }
+		// public EmployeeData() {
+		// ID = 0;
+		// }
 
-        /**
-         * @param lastName the lastName to set
-         */
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
+		public EmployeeData(int ID) {
+			this.ID = ID;
+			this.firstName = "";
+			this.lastName = "";
+			this.gender = Gender.Unknown;
+			this.deductRate = 0;
+			this.location = "";
+		}
 
-        /**
-         * @return the gender
-         */
-        public Gender getGender() {
-            return gender;
-        }
+		public EmployeeData(int ID, String firstName, String lastName, Gender gender, double deductRate,
+				String location) {
+			this.ID = ID;
+			this.firstName = firstName;
+			this.lastName = lastName;
+			this.gender = gender;
+			this.deductRate = deductRate;
+			this.location = location;
+		}
 
-        /**
-         * @param gender the gender to set
-         */
-        public void setGender(Gender gender) {
-            this.gender = gender;
-        }
+		public EmployeeData(EmployeeData data) {
+			this.ID = data.ID;
+			this.firstName = data.firstName;
+			this.lastName = data.lastName;
+			this.gender = data.gender;
+			this.deductRate = data.deductRate;
+			this.location = data.location;
+		}
 
-        /**
-         * @return the deductRate
-         */
-        public double getDeductRate() {
-            return deductRate;
-        }
+		// <editor-fold desc="GETTERS AND SETTERS">
+		/**
+		 * @return the ID
+		 */
+		public int getID() {
+			return ID;
+		}
 
-        /**
-         * @param deductRate the deductRate to set
-         */
-        public void setDeductRate(double deductRate) {
-            this.deductRate = deductRate;
-        }
-        // </editor-fold>
+		/**
+		 * @return the firstName
+		 */
+		public String getFirstName() {
+			return firstName;
+		}
 
-        public double calcAnnualGrossIncome() {
-            return calcAnnualNetIncome() * (1-deductRate);
-        }
+		/**
+		 * @param firstName the firstName to set
+		 */
+		public void setFirstName(String firstName) {
+			this.firstName = firstName;
+		}
 
-        public double calcAnnualNetIncome() {
-            return 0;
-        };
-    }
+		/**
+		 * @return the lastName
+		 */
+		public String getLastName() {
+			return lastName;
+		}
+
+		/**
+		 * @param lastName the lastName to set
+		 */
+		public void setLastName(String lastName) {
+			this.lastName = lastName;
+		}
+
+		/**
+		 * @return the gender
+		 */
+		public Gender getGender() {
+			return gender;
+		}
+
+		/**
+		 * @param gender the gender to set
+		 */
+		public void setGender(Gender gender) {
+			this.gender = gender;
+		}
+
+		/**
+		 * @return the deductRate
+		 */
+		public double getDeductRate() {
+			return deductRate;
+		}
+
+		/**
+		 * @param deductRate the deductRate to set
+		 */
+		public void setDeductRate(double deductRate) {
+			this.deductRate = deductRate;
+		}
+
+		/**
+		 * @return the location
+		 */
+		public String getLocation() {
+			return location;
+		}
+
+		/**
+		 * @param location the location to set
+		 */
+		public void setLocation(String location) {
+			this.location = location;
+		};
+
+		// </editor-fold>
+
+		public double calcAnnualGrossIncome() {
+			return calcAnnualNetIncome() * (1 - deductRate);
+		}
+
+		public double calcAnnualNetIncome() {
+			return 0;
+		}
+	}
 }
