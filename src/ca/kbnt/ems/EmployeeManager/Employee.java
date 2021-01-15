@@ -13,16 +13,25 @@ public abstract class Employee implements HashTable.IHashable {
 
     // <editor-fold desc="STATIC ATTRIBUTES">
     public enum Gender {
-        Male,
-        Female,
-        NonBinary,
-        Other,
-        Unknown,
+    	/**
+    	 * @deprecated This is a legacy gender, and will be removed in a future release.
+    	 */
+    	Male,
+    	/**
+    	 * @deprecated This is a legacy gender, and will be removed in a future release.
+    	 */
+    	Female,
+    	NonBinary,
+    	Other,
+        Yes,
+        Definitely,
+        MostLikely,
         No,
         Maybe,
         ProbablyNot,
-        Yes,
-        ReplyHazyTryAgain
+        ReplyHazyTryAgain,
+        AskAgainLater,
+        Unknown
     }
     //</editor-fold>
 
