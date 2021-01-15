@@ -22,85 +22,87 @@ package ca.kbnt.ems.EmployeeManager;
  */
 public class FullTimeEmployee extends Employee {
 
-    // <editor-fold desc="ATTRIBUTES">
-    private FTEmployeeData data;
-    // </editor-fold>
+	// <editor-fold desc="ATTRIBUTES">
+	private FTEmployeeData data;
+	// </editor-fold>
 
-    // <editor-fold desc="CONSTRUCTORS">
-    public FullTimeEmployee(int ID, String firstName, String lastName, Gender gender, double deductionRate, double yearlySalary) {
-        super(ID, firstName, lastName, gender, deductionRate);
-        data = new FTEmployeeData(ID, firstName, lastName, gender, deductionRate, yearlySalary);
-    }
+	// <editor-fold desc="CONSTRUCTORS">
+	public FullTimeEmployee(int ID, String firstName, String lastName, Gender gender, double deductionRate,
+			String location, double yearlySalary) {
+		super(ID, firstName, lastName, gender, deductionRate, location);
+		data = new FTEmployeeData(ID, firstName, lastName, gender, deductionRate, location, yearlySalary);
+	}
 
-    public FullTimeEmployee(int ID) {
-        super(ID);
-        data = new FTEmployeeData(ID);
-    }
+	public FullTimeEmployee(int ID) {
+		super(ID);
+		data = new FTEmployeeData(ID);
+	}
 
-    public FullTimeEmployee(FTEmployeeData data) {
-        super(data);
-        this.data = new FTEmployeeData(data);
-    }
-    // </editor-fold>
-    
-    @Override
-    public void setData(EmployeeData data) {
-        this.data = new FTEmployeeData(data);
-    }
-    
-    @Override
-    public  EmployeeData getData() {
-        return new EmployeeData(this.data);
-    }
-    
-    public static class FTEmployeeData extends EmployeeData {
+	public FullTimeEmployee(FTEmployeeData data) {
+		super(data);
+		this.data = new FTEmployeeData(data);
+	}
+	// </editor-fold>
 
-        private double yearlySalary;
+	@Override
+	public void setData(EmployeeData data) {
+		this.data = new FTEmployeeData(data);
+	}
 
-        public FTEmployeeData(int ID) {
-            super(ID, "", "", Gender.Unknown, 0);
-            yearlySalary = 0;
-        }
+	@Override
+	public EmployeeData getData() {
+		return new EmployeeData(this.data);
+	}
 
-        public FTEmployeeData(int ID, String firstName, String lastName, Gender gender, double deductRate, double yearlySalary) {
-            super(ID, firstName, lastName, gender, deductRate);
-            this.yearlySalary = yearlySalary;
-        }
+	public static class FTEmployeeData extends EmployeeData {
 
-        public FTEmployeeData(FTEmployeeData data) {
-            this((EmployeeData) data);
-        }
+		private double yearlySalary;
 
-        public FTEmployeeData(EmployeeData data) {
-            super(data);
-            this.yearlySalary = data.calcAnnualNetIncome();
-//            if (data instanceof FTEmployeeData) {
-//                var ftdata = (FTEmployeeData) data;
-//                this.yearlySalary = ftdata.yearlySalary;
-//            }
-        }
+		public FTEmployeeData(int ID) {
+			super(ID);
+			yearlySalary = 0;
+		}
 
-        // <editor-fold desc="GETTERS AND SETTERS">
-        /**
-         * @return the yearlySalary
-         */
-        public double getYearlySalary() {
-            return yearlySalary;
-        }
+		public FTEmployeeData(int ID, String firstName, String lastName, Gender gender, double deductRate,
+				String location, double yearlySalary) {
+			super(ID, firstName, lastName, gender, deductRate, location);
+			this.yearlySalary = yearlySalary;
+		}
 
-        /**
-         * @param yearlySalary the yearlySalary to set
-         */
-        public void setYearlySalary(double yearlySalary) {
-            this.yearlySalary = yearlySalary;
-        }
+		public FTEmployeeData(FTEmployeeData data) {
+			this((EmployeeData) data);
+		}
 
-        // </editor-fold>
-        @Override
-        public double calcAnnualNetIncome() {
-            return yearlySalary;
-        }
+		public FTEmployeeData(EmployeeData data) {
+			super(data);
+			this.yearlySalary = data.calcAnnualNetIncome();
+			// if (data instanceof FTEmployeeData) {
+			// var ftdata = (FTEmployeeData) data;
+			// this.yearlySalary = ftdata.yearlySalary;
+			// }
+		}
 
-    }
+		// <editor-fold desc="GETTERS AND SETTERS">
+		/**
+		 * @return the yearlySalary
+		 */
+		public double getYearlySalary() {
+			return yearlySalary;
+		}
+
+		/**
+		 * @param yearlySalary the yearlySalary to set
+		 */
+		public void setYearlySalary(double yearlySalary) {
+			this.yearlySalary = yearlySalary;
+		}
+
+		// </editor-fold>
+		@Override
+		public double calcAnnualNetIncome() {
+			return yearlySalary;
+		}
+
+	}
 
 }
