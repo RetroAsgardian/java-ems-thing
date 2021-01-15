@@ -22,6 +22,7 @@ public abstract class Employee implements HashTable.IHashable {
     	 */
     	Female,
     	NonBinary,
+    	SeaCaptain,
     	Other,
         Yes,
         Definitely,
@@ -29,8 +30,15 @@ public abstract class Employee implements HashTable.IHashable {
         No,
         Maybe,
         ProbablyNot,
-        ReplyHazyTryAgain,
+        GenderHazyTryAgain,
         AskAgainLater,
+        /**
+         * My dear sir, there are individuals roaming the streets of Fallen London at this
+         * very moment with the faces of squid! Squid! Do you ask them their gender? And
+         * yet you waste our time asking me trifling and impertinent questions about mine?
+         * It is my own business, sir, and I bid you good day.
+         */
+        DoNotAskAgainEverYouHaveBeenWarned,
         Unknown
     }
     //</editor-fold>
