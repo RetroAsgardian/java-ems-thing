@@ -25,11 +25,12 @@ public class EmployeeManager {
     public class DataChangedEvent {
 
         final DataChangeOperation operation;
-        final Employee changedEmployee;
+        final EmployeeData newData, oldData;
 
-        public DataChangedEvent(Employee changedEmployee, DataChangeOperation change) {
+        public DataChangedEvent(EmployeeData newData, EmployeeData oldData, DataChangeOperation change) {
             this.operation = change;
-            this.changedEmployee = changedEmployee;
+            this.newData = newData;
+            this.oldData = oldData;
         }
     }
 
@@ -89,21 +90,21 @@ public class EmployeeManager {
     public void addEmployee(Employee e) throws HashTable.IDInUseError {
 
         table.add(e);
-        this.notifyDataChangedListeners(new DataChangedEvent(e, DataChangeOperation.New));
+        this.notifyDataChangedListeners(new DataChangedEvent(e.getData(), null, DataChangeOperation.New));
 
     }
 
     public void removeEmployee(int ID) {
         var emp = table.remove(ID);
         if (emp != null) {
-            this.notifyDataChangedListeners(new DataChangedEvent(emp, DataChangeOperation.Removed));
+            this.notifyDataChangedListeners(new DataChangedEvent(null, emp.getData(), DataChangeOperation.Removed));
         }
     }
 
     public void removeEmployee(Employee e) {
         var emp = table.remove(e);
         if (emp != null) {
-            this.notifyDataChangedListeners(new DataChangedEvent(emp, DataChangeOperation.Removed));
+            this.notifyDataChangedListeners(new DataChangedEvent(null, emp.getData(), DataChangeOperation.Removed));
         }
     }
 
@@ -122,7 +123,7 @@ public class EmployeeManager {
     public Employee newEmployee(EmployeeData data) throws HashTable.IDInUseError {
         Employee emp = new Employee(data);
         table.add(emp);
-        this.notifyDataChangedListeners(new DataChangedEvent(emp, DataChangeOperation.New));
+        this.notifyDataChangedListeners(new DataChangedEvent(emp.getData(), null, DataChangeOperation.New));
         return emp;
     }
 
