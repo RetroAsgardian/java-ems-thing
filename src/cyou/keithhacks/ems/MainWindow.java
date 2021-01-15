@@ -20,6 +20,7 @@ import ca.kbnt.ems.EmployeeManager.Employee.EmployeeData;
 import ca.kbnt.ems.EmployeeManager.Employee.Gender;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
 import ca.kbnt.ems.EmployeeManager.FullTimeEmployee;
+import ca.kbnt.ems.EmployeeManager.FullTimeEmployee.FTEmployeeData;
 
 public class MainWindow extends JInternalFrame {
 	
