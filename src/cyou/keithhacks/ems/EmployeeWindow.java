@@ -124,7 +124,10 @@ public class EmployeeWindow extends JInternalFrame {
 			this.add(new JLabel("Oh no"), con);
 			this.add(new JLabel("Something has gone horribly wrong"), con2);
 			
-			this.add(new JLabel("Class"), con);
+			this.add(new JLabel("Employee"), con);
+			this.add(new JLabel(employee.getClass().getName()), con2);
+			
+			this.add(new JLabel("Data"), con);
 			this.add(new JLabel(data.getClass().getName()), con2);
 		}
 		
