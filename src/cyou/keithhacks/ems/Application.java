@@ -75,7 +75,7 @@ public class Application extends JFrame {
 		applicationMenu.add(help);
 		JMenuItem about = new JMenuItem("About...");
 		about.addActionListener((ActionEvent e) -> {
-			addWindow(new AboutWindow(), true);
+			addWindow(new AboutDialog(), true);
 		});
 		applicationMenu.add(about);
 		applicationMenu.addSeparator();

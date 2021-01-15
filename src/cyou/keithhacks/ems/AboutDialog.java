@@ -7,11 +7,11 @@ import java.awt.Insets;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 
-public class AboutWindow extends JInternalFrame {
+public class AboutDialog extends JInternalFrame {
 
 	private static final long serialVersionUID = 7749287266703179108L;
 
-	public AboutWindow() {
+	public AboutDialog() {
 		super("About", false, true, false, false);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
