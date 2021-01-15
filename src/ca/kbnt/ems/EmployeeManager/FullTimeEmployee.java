@@ -50,8 +50,8 @@ public class FullTimeEmployee extends Employee {
 	}
 
 	@Override
-	public EmployeeData getData() {
-		return new EmployeeData(this.data);
+	public FTEmployeeData getData() {
+		return new FTEmployeeData(this.data);
 	}
 
 	public static class FTEmployeeData extends EmployeeData {

@@ -51,8 +51,8 @@ public class PartTimeEmployee extends Employee {
 	}
 
 	@Override
-	public EmployeeData getData() {
-		return new EmployeeData(this.data);
+	public PTEmployeeData getData() {
+		return new PTEmployeeData(this.data);
 	}
 
 	public static class PTEmployeeData extends EmployeeData {
@@ -91,28 +91,27 @@ public class PartTimeEmployee extends Employee {
 		public double getHourlyWage() {
 			return hourlyWage;
 		}
-		
+
 		public void setHourlyWage(double hourlyWage) {
 			this.hourlyWage = hourlyWage;
 		}
-		
-		
+
 		public double getHoursPerWeek() {
 			return hoursPerWeek;
 		}
-		
+
 		public void setHoursPerWeek(double hoursPerWeek) {
 			this.hoursPerWeek = hoursPerWeek;
 		}
-		
-		
+
 		public double getWeeksPerYear() {
 			return weeksPerYear;
 		}
-		
+
 		public void setWeeksPerYear(double weeksPerYear) {
 			this.weeksPerYear = weeksPerYear;
 		}
+
 		// </editor-fold>
 		@Override
 		public double calcAnnualNetIncome() {
