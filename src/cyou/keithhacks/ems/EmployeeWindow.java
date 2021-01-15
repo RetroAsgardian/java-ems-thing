@@ -15,7 +15,9 @@ import ca.kbnt.ems.EmployeeManager.Employee;
 import ca.kbnt.ems.EmployeeManager.Employee.EmployeeData;
 import ca.kbnt.ems.EmployeeManager.Employee.Gender;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
+import ca.kbnt.ems.EmployeeManager.FullTimeEmployee;
 import ca.kbnt.ems.EmployeeManager.FullTimeEmployee.FTEmployeeData;
+import ca.kbnt.ems.EmployeeManager.PartTimeEmployee;
 import ca.kbnt.ems.EmployeeManager.PartTimeEmployee.PTEmployeeData;
 
 public class EmployeeWindow extends JInternalFrame {
@@ -32,7 +34,14 @@ public class EmployeeWindow extends JInternalFrame {
 		this.app = app;
 		this.db = db;
 		this.employee = employee;
-		this.data = employee.getData();
+		
+		// HACK java's dumb and won't return the right thing otherwise
+		if (employee instanceof FullTimeEmployee)
+			this.data = ((FullTimeEmployee) employee).getData();
+		else if (employee instanceof PartTimeEmployee)
+			this.data = ((PartTimeEmployee) employee).getData();
+		else
+			this.data = employee.getData();
 
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
