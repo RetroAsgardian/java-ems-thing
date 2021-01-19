@@ -81,8 +81,8 @@ public class PTEmployeeData extends EmployeeData {
     // </editor-fold>
 
     @Override
-    public FTEmployeeData clone() {
-        return new FTEmployeeData(this);
+    public PTEmployeeData clone() {
+        return new PTEmployeeData(this);
     }
 
     @Override
