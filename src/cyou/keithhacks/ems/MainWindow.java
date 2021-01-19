@@ -19,6 +19,7 @@ import ca.kbnt.ems.EmployeeManager.Employee;
 import ca.kbnt.ems.EmployeeManager.EmployeeData.Gender;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
 import ca.kbnt.ems.EmployeeManager.FTEmployeeData;
+import ca.kbnt.ems.EmployeeManager.PTEmployeeData;
 
 public class MainWindow extends JInternalFrame {
 
@@ -42,10 +43,10 @@ public class MainWindow extends JInternalFrame {
 		data.setDeductRate(0.2);
 		data.setYearlySalary(10000.0);
 		emp.setData(data);
-
-		db.newEmployee();
-		db.newEmployee();
-		db.newEmployee();
+		
+		emp = db.newEmployee();
+		emp.setData(new PTEmployeeData(emp.getID()));
+		
 
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 

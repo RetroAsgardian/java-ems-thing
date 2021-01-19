@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -67,7 +68,7 @@ public class EmployeePane extends JPanel {
 		
 		buildCommon(con, con2);
 		
-		/*
+		
 		if (data instanceof FTEmployeeData) {
 			FTEmployeeData ftdata = (FTEmployeeData) data;
 			
@@ -99,11 +100,10 @@ public class EmployeePane extends JPanel {
 			this.add(new JLabel("DCLS"), con);
 			this.add(new JLabel(data.getClass().getName()), con2);
 		}
-		*/
 		
 		this.add(new JLabel("Net salary"), con);
 		
-		netSalary = new JTextField(Double.toString(data.calcAnnualNetIncome()));
+		netSalary = new JTextField(NumberFormat.getCurrencyInstance().format(data.calcAnnualNetIncome()));
 		netSalary.setEditable(false);
 		netSalary.setEnabled(false);
 		
@@ -112,7 +112,7 @@ public class EmployeePane extends JPanel {
 		
 		this.add(new JLabel("Gross salary"), con);
 		
-		grossSalary = new JTextField(Double.toString(data.calcAnnualGrossIncome()));
+		grossSalary = new JTextField(NumberFormat.getCurrencyInstance().format(data.calcAnnualGrossIncome()));
 		grossSalary.setEditable(false);
 		grossSalary.setEnabled(false);
 		
@@ -120,8 +120,8 @@ public class EmployeePane extends JPanel {
 		
 		
 		this.addEditListener((data, canSave) -> {
-			netSalary.setText(Double.toString(data.calcAnnualNetIncome()));
-			grossSalary.setText(Double.toString(data.calcAnnualGrossIncome()));
+			netSalary.setText(NumberFormat.getCurrencyInstance().format(data.calcAnnualNetIncome()));
+			grossSalary.setText(NumberFormat.getCurrencyInstance().format(data.calcAnnualGrossIncome()));
 		});
 	}
 	
@@ -160,14 +160,14 @@ public class EmployeePane extends JPanel {
 		gender = new JComboBox<Gender>(Gender.class.getEnumConstants());
 		gender.setSelectedItem(data.getGender());
 		gender.addItemListener((ItemEvent e) -> {
-			if (e.getStateChange() != e.SELECTED)
+			if (e.getStateChange() != ItemEvent.SELECTED)
 				return;
 			
 			data.setGender((Gender) gender.getSelectedItem());
 			notifyEditListeners(validateState());
 			
 			if (data.getGender() == Gender.Male || data.getGender() == Gender.Female) {
-				app.addWindow(new InfoDialog(app, "Warning", "This is a deprecated gender, and will be removed in a future release."), true);
+				app.addWindow(new InfoDialog(app, "Warning", "Male and Female are deprecated genders, and will be removed in a future release."), true);
 			}
 		});
 		this.add(gender, con2);
@@ -185,7 +185,16 @@ public class EmployeePane extends JPanel {
 		
 		this.add(new JLabel("Deduct rate"), con);
 		
-		// TODO add percentage sign at end
+		JPanel deductRatePanel = new JPanel();
+		deductRatePanel.setLayout(new GridBagLayout());
+		this.add(deductRatePanel, con2);
+		
+		GridBagConstraints dcon = new GridBagConstraints();
+		dcon.gridx = 0;
+		dcon.gridy = 0;
+		dcon.fill = GridBagConstraints.HORIZONTAL;
+		dcon.weightx = 1.0;
+		
 		deductRate = new JSpinner(new SpinnerNumberModel(
 				data.getDeductRate() * 100,
 				0,
@@ -196,7 +205,13 @@ public class EmployeePane extends JPanel {
 			data.setDeductRate(((Double) deductRate.getModel().getValue()).doubleValue() / 100);
 			notifyEditListeners(validateState());
 		});
-		this.add(deductRate, con2);
+		deductRatePanel.add(deductRate, dcon);
+		
+		dcon = (GridBagConstraints) dcon.clone();
+		dcon.gridx = 1;
+		dcon.fill = GridBagConstraints.NONE;
+		dcon.weightx = 0.0;
+		deductRatePanel.add(new JLabel(" %"), dcon);
 	}
 	
 	protected boolean validateState() {
