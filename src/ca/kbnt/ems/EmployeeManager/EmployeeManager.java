@@ -22,7 +22,7 @@ public class EmployeeManager {
         New, Modified, Removed, ChangedDataType
     }
 
-    public class DataChangedEvent {
+    public static class DataChangedEvent {
 
         final DataChangeOperation operation;
         final EmployeeData newData, oldData;
@@ -87,11 +87,13 @@ public class EmployeeManager {
         return ID;
     }
 
-    public void addEmployee(Employee e) throws HashTable.IDInUseError {
+    public void addEmployee(Employee emp) throws HashTable.IDInUseError {
 
-        table.add(e);
-        this.notifyDataChangedListeners(new DataChangedEvent(e.getData(), null, DataChangeOperation.New));
-
+        table.add(emp);
+        this.notifyDataChangedListeners(new DataChangedEvent(emp.getData(), null, DataChangeOperation.New));
+        emp.addDataChangedListener((e) -> {
+            this.notifyDataChangedListeners(e);
+        });
     }
 
     public void removeEmployee(int ID) {
@@ -124,6 +126,9 @@ public class EmployeeManager {
         Employee emp = new Employee(data);
         table.add(emp);
         this.notifyDataChangedListeners(new DataChangedEvent(emp.getData(), null, DataChangeOperation.New));
+        emp.addDataChangedListener((e) -> {
+            this.notifyDataChangedListeners(e);
+        });
         return emp;
     }
 
