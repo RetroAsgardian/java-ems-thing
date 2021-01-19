@@ -74,24 +74,68 @@ public class EmployeePane extends JPanel {
 			
 			this.add(new JLabel("Yearly salary"), con);
 			
-			this.add(new JTextField(Double.toString(ftdata.getYearlySalary())), con2);
+			JSpinner yearlySalary = new JSpinner(new SpinnerNumberModel(
+					ftdata.getYearlySalary(),
+					0.0,
+					null,
+					100
+			));
+			yearlySalary.addChangeListener((ChangeEvent e) -> {
+				ftdata.setYearlySalary(((Double) yearlySalary.getModel().getValue()).doubleValue());
+				notifyEditListeners(validateState());
+			});
+			
+			this.add(yearlySalary, con2);
 			
 		} else if (data instanceof PTEmployeeData) {
 			PTEmployeeData ptdata = (PTEmployeeData) data;
 			
 			this.add(new JLabel("Hourly wage"), con);
 			
-			this.add(new JTextField(Double.toString(ptdata.getHourlyWage())), con2);
+			JSpinner hourlyWage = new JSpinner(new SpinnerNumberModel(
+					ptdata.getHourlyWage(),
+					0.0,
+					null,
+					0.5
+			));
+			hourlyWage.addChangeListener((ChangeEvent e) -> {
+				ptdata.setHourlyWage(((Double) hourlyWage.getModel().getValue()).doubleValue());
+				notifyEditListeners(validateState());
+			});
+			
+			this.add(hourlyWage, con2);
 			
 			
 			this.add(new JLabel("Hours per week"), con);
 			
-			this.add(new JTextField(Double.toString(ptdata.getHoursPerWeek())), con2);
+			JSpinner hoursPerWeek = new JSpinner(new SpinnerNumberModel(
+					ptdata.getHoursPerWeek(),
+					0.0,
+					null,
+					1
+			));
+			hoursPerWeek.addChangeListener((ChangeEvent e) -> {
+				ptdata.setHoursPerWeek(((Double) hoursPerWeek.getModel().getValue()).doubleValue());
+				notifyEditListeners(validateState());
+			});
+			
+			this.add(hoursPerWeek, con2);
 			
 			
 			this.add(new JLabel("Weeks per year"), con);
 			
-			this.add(new JTextField(Double.toString(ptdata.getWeeksPerYear())), con2);
+			JSpinner weeksPerYear = new JSpinner(new SpinnerNumberModel(
+					ptdata.getWeeksPerYear(),
+					0.0,
+					null,
+					1
+			));
+			weeksPerYear.addChangeListener((ChangeEvent e) -> {
+				ptdata.setWeeksPerYear(((Double) weeksPerYear.getModel().getValue()).doubleValue());
+				notifyEditListeners(validateState());
+			});
+			
+			this.add(weeksPerYear, con2);
 			
 		} else {
 			this.add(new JLabel("ECLS"), con);
@@ -149,7 +193,7 @@ public class EmployeePane extends JPanel {
 
 		lastName = new JTextField(data.getLastName());
 		lastName.getDocument().addDocumentListener(new SimpleDocListener((DocumentEvent e) -> {
-			data.setLastName(firstName.getText());
+			data.setLastName(lastName.getText());
 			notifyEditListeners(validateState());
 		}));
 		this.add(lastName, con2);
@@ -222,6 +266,11 @@ public class EmployeePane extends JPanel {
 		
 		if (location.getDocument().getLength() <= 0)
 			return false;
+		
+		if (data instanceof PTEmployeeData) {
+			if (((PTEmployeeData) data).getHourlyWage() < 15.0)
+				return false;
+		}
 		
 		return true;
 	}
