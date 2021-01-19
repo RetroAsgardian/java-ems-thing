@@ -50,6 +50,10 @@ public class EmployeeData {
          * It is my own business, sir, and I bid you good day.
          */
         DoNotAskAgainEverYouHaveBeenWarned,
+        /**
+         * You wouldn't download a gender
+         */
+        Pirated,
         Unknown
     }
 

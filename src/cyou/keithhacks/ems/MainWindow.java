@@ -40,6 +40,7 @@ public class MainWindow extends JInternalFrame {
 		data.setLastName("Lastname");
 		data.setGender(Gender.No);
 		data.setDeductRate(0.2);
+		data.setYearlySalary(10000.0);
 		emp.setData(data);
 
 		db.newEmployee();

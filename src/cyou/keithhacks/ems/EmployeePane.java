@@ -3,13 +3,17 @@ package cyou.keithhacks.ems;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -27,12 +31,14 @@ public class EmployeePane extends JPanel {
 		public void editMade(EmployeeData data, boolean canSave);
 	}
 	
+	Application app;
 	EmployeeManager db;
 	Employee employee;
 	EmployeeData data;
 	
-	public EmployeePane(EmployeeManager db, Employee employee) {
+	public EmployeePane(Application app, EmployeeManager db, Employee employee) {
 		super();
+		this.app = app;
 		this.db = db;
 		this.employee = employee;
 		this.data = employee.getData();
@@ -97,62 +103,115 @@ public class EmployeePane extends JPanel {
 		
 		this.add(new JLabel("Net salary"), con);
 		
-		this.add(new JLabel(Double.toString(data.calcAnnualNetIncome())), con2);
+		netSalary = new JTextField(Double.toString(data.calcAnnualNetIncome()));
+		netSalary.setEditable(false);
+		netSalary.setEnabled(false);
+		
+		this.add(netSalary, con2);
 
 		
 		this.add(new JLabel("Gross salary"), con);
 		
-		this.add(new JLabel(Double.toString(data.calcAnnualGrossIncome())), con2);
+		grossSalary = new JTextField(Double.toString(data.calcAnnualGrossIncome()));
+		grossSalary.setEditable(false);
+		grossSalary.setEnabled(false);
+		
+		this.add(grossSalary, con2);
+		
+		
+		this.addEditListener((data, canSave) -> {
+			netSalary.setText(Double.toString(data.calcAnnualNetIncome()));
+			grossSalary.setText(Double.toString(data.calcAnnualGrossIncome()));
+		});
 	}
 	
 	JTextField firstName;
 	JTextField lastName;
 	JComboBox<Gender> gender;
 	JTextField location;
-	JTextField deductRate;
+	JSpinner deductRate;
+	
+	JTextField netSalary;
+	JTextField grossSalary;
 	
 	protected void buildCommon(GridBagConstraints con, GridBagConstraints con2) {
 		this.add(new JLabel("First name"), con);
 		
 		firstName = new JTextField(data.getFirstName());
-		firstName.getDocument().addDocumentListener(new DocumentListener() {
-			public void insertUpdate(DocumentEvent e) {
-				notifyEditListeners(true);
-			}
-			public void removeUpdate(DocumentEvent e) {
-				// Don't allow saving if field is blank
-				notifyEditListeners(e.getDocument().getLength() > 0);
-			}
-			public void changedUpdate(DocumentEvent e) {
-				notifyEditListeners(true);
-			}
-		});
+		firstName.getDocument().addDocumentListener(new SimpleDocListener((DocumentEvent e) -> {
+			data.setFirstName(firstName.getText());
+			notifyEditListeners(validateState());
+		}));
 		this.add(firstName, con2);
 		
 		
 		this.add(new JLabel("Last name"), con);
 
-		this.add(new JTextField(data.getLastName()), con2);
+		lastName = new JTextField(data.getLastName());
+		lastName.getDocument().addDocumentListener(new SimpleDocListener((DocumentEvent e) -> {
+			data.setLastName(firstName.getText());
+			notifyEditListeners(validateState());
+		}));
+		this.add(lastName, con2);
 		
 		
 		this.add(new JLabel("Gender"), con);
 		
-		JComboBox<Gender> gender = new JComboBox<Gender>(Gender.class.getEnumConstants());
+		gender = new JComboBox<Gender>(Gender.class.getEnumConstants());
 		gender.setSelectedItem(data.getGender());
+		gender.addItemListener((ItemEvent e) -> {
+			if (e.getStateChange() != e.SELECTED)
+				return;
+			
+			data.setGender((Gender) gender.getSelectedItem());
+			notifyEditListeners(validateState());
+			
+			if (data.getGender() == Gender.Male || data.getGender() == Gender.Female) {
+				app.addWindow(new InfoDialog(app, "Warning", "This is a deprecated gender, and will be removed in a future release."), true);
+			}
+		});
 		this.add(gender, con2);
 		
 		
 		this.add(new JLabel("Location"), con);
 		
-		this.add(new JTextField(data.getLocation()), con2);
+		location = new JTextField(data.getLocation());
+		location.getDocument().addDocumentListener(new SimpleDocListener((DocumentEvent e) -> {
+			data.setLocation(location.getText());
+			notifyEditListeners(validateState());
+		}));
+		this.add(location, con2);
 		
 		
 		this.add(new JLabel("Deduct rate"), con);
 		
-		this.add(new JTextField(Double.toString(data.getDeductRate())), con2);
+		// TODO add percentage sign at end
+		deductRate = new JSpinner(new SpinnerNumberModel(
+				data.getDeductRate() * 100,
+				0,
+				100,
+				0.1
+		));
+		deductRate.addChangeListener((ChangeEvent e) -> {
+			data.setDeductRate(((Double) deductRate.getModel().getValue()).doubleValue() / 100);
+			notifyEditListeners(validateState());
+		});
+		this.add(deductRate, con2);
 	}
 	
-	private ArrayList<EditListener> editListeners;
+	protected boolean validateState() {
+		if (firstName.getDocument().getLength() <= 0)
+			return false;
+		if (lastName.getDocument().getLength() <= 0)
+			return false;
+		
+		if (location.getDocument().getLength() <= 0)
+			return false;
+		
+		return true;
+	}
+	
+	protected ArrayList<EditListener> editListeners;
 	
 	public void addEditListener(EditListener l) {
 		editListeners.add(l);
@@ -161,7 +220,7 @@ public class EmployeePane extends JPanel {
 		editListeners.remove(l);
 	}
 	
-	private void notifyEditListeners(boolean canSave) {
+	protected void notifyEditListeners(boolean canSave) {
 		editListeners.forEach((EditListener l) -> {
 			l.editMade(data, canSave);
 		});

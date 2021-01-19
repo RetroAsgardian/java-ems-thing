@@ -39,7 +39,7 @@ public class EmployeeWindow extends JInternalFrame {
 	void build() {
 		this.setLayout(new BorderLayout());
 		
-		pane = new EmployeePane(db, employee);
+		pane = new EmployeePane(app, db, employee);
 		this.add(pane, BorderLayout.CENTER);
 		
 		JPanel bottom = new JPanel();
@@ -53,10 +53,16 @@ public class EmployeeWindow extends JInternalFrame {
 		bottom.add(cancel);
 		
 		JButton save = new JButton("Save");
+		save.setEnabled(false);
 		save.addActionListener((ActionEvent e) -> {
+			pane.saveChanges();
 			this.doDefaultCloseAction();
 		});
 		bottom.add(save);
+		
+		pane.addEditListener((data, canSave) -> {
+			save.setEnabled(canSave);
+		});
 	}
 
 }
