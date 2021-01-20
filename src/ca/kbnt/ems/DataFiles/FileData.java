@@ -109,6 +109,8 @@ public class FileData {
 			jsonGen.writeStringField("gender", data.getGender().name());
 			jsonGen.writeNumberField("deductRate", data.getDeductRate());
 			jsonGen.writeStringField("location", data.getLocation());
+			jsonGen.writeNumberField("netIncome", data.calcAnnualNetIncome());
+			jsonGen.writeNumberField("grossIncome", data.calcAnnualGrossIncome());
 
 			if (data instanceof PTEmployeeData) {
 				var ptdata = (PTEmployeeData) data;
