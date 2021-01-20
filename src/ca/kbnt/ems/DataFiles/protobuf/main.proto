@@ -1,0 +1,34 @@
+// protoc --java_out="src" ./src/ca/kbnt/ems/DataFiles/protobuf/main.proto
+
+syntax = "proto3";
+
+option java_package = "ca.kbnt.ems.DataFiles.protobuf";
+option java_outer_classname = "ProtoEmployeeList";
+
+message EmployeeList {
+    repeated Employee list = 1;
+}
+
+message Employee {
+    int32 ID = 1;
+    string fname = 2;
+    string lname = 3;
+    string gender = 4;
+    double deductRate = 5;
+    string location = 6;
+
+    oneof additionalData {
+        PTEmployee pte = 7;
+        FTEmployee fte = 8;
+    }
+}
+
+message FTEmployee {
+	double yearlySalary = 1;
+}
+
+message PTEmployee {
+    double hourlyWage = 1;
+    double hoursPerWeek = 2;
+    double weeksPerYear = 3;
+}
