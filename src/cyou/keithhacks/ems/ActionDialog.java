@@ -73,7 +73,7 @@ public class ActionDialog extends JInternalFrame {
 
 		switch (defaultButton) {
 			case Cancel:
-				getRootPane().setDefaultButton(ok);
+				getRootPane().setDefaultButton(cancel);
 				break;
 			case Ok:
 			default:

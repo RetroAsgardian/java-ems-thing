@@ -20,6 +20,7 @@ import javax.swing.JTable;
 
 import ca.kbnt.ems.EmployeeManager.Employee;
 import ca.kbnt.ems.EmployeeManager.EmployeeData.Gender;
+import cyou.keithhacks.ems.ActionDialog.Button;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
 import ca.kbnt.ems.EmployeeManager.FTEmployeeData;
 import ca.kbnt.ems.EmployeeManager.PTEmployeeData;
@@ -93,12 +94,12 @@ public class MainWindow extends JInternalFrame {
 
 					if (employee == null)
 						app.addWindow(new ActionDialog(app, "Error", "Employee not found", (ActionEvent e2) -> {
-						}, null), true);
+						}, Button.Ok), true);
 					else
 						app.addWindow(new EmployeeWindow(app, db, employee));
 				} catch (NumberFormatException e1) {
 					app.addWindow(new ActionDialog(app, "Error", "Invalid ID", (ActionEvent e2) -> {
-					}, null), true);
+					}, Button.Ok), true);
 				}
 			}), true);
 		});
