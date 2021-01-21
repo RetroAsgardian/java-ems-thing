@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import ca.kbnt.ems.EmployeeManager.Employee;
 import ca.kbnt.ems.EmployeeManager.EmployeeData;
 import ca.kbnt.ems.EmployeeManager.EmployeeData.Gender;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
@@ -30,10 +31,26 @@ public class EmployeeTableModel extends AbstractTableModel {
 	
 	protected int[] enabledColumns;
 	
+	protected ArrayList<Integer> ids;
+	
 	public EmployeeTableModel(EmployeeManager db) {
 		this.db = db;
 		
 		enabledColumns = getEnabledColumns();
+		refreshIDs();
+	}
+	
+	public void refresh() {
+		refreshIDs();
+		this.fireTableDataChanged();
+	}
+	
+	protected void refreshIDs() {
+		ids = new ArrayList<Integer>();
+		
+		for (Employee e: db) {
+			ids.add(e.getID());
+		}
 	}
 	
 	protected int[] getEnabledColumns() {
@@ -66,14 +83,20 @@ public class EmployeeTableModel extends AbstractTableModel {
 		return allColumns[enabledColumns[column]];
 	}
 	
+	/* Things that could have been
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		return !("ID".equals(allColumns[enabledColumns[columnIndex]]));
+	}
+	*/
+	
 	public Class<?> getColumnClass(int column) {
 		return columnClasses[enabledColumns[column]];
 	}
-
+	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
-		EmployeeData e = db.getEmployee(rowIndex).getData();
+		EmployeeData e = db.getEmployee(getIDAt(rowIndex)).getData();
 		
 		if (columnIndex >= enabledColumns.length)
 			return null;
@@ -94,6 +117,10 @@ public class EmployeeTableModel extends AbstractTableModel {
 			return e.calcAnnualNetIncome();
 		
 		return null;
+	}
+	
+	public int getIDAt(int row) {
+		return ids.get(row).intValue();
 	}
 
 }

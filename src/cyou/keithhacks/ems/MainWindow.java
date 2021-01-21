@@ -6,6 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -117,6 +119,20 @@ public class MainWindow extends JInternalFrame {
 
 		tableModel = new EmployeeTableModel(db);
 		table = new JTable(tableModel);
+		
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() >= 2) {
+					int row = table.rowAtPoint(e.getPoint());
+					if (row < 0)
+						return;
+					
+					app.addWindow(new EmployeeWindow(app, db, db.getEmployee(tableModel.getIDAt(row))));
+				}
+			}
+		});
+		
+		table.setAutoCreateRowSorter(true);
 
 		tablePane = new JScrollPane(table);
 		tablePane.setPreferredSize(new Dimension(tablePane.getPreferredSize().width, table.getPreferredSize().height));
