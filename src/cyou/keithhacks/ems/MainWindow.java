@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -66,6 +67,7 @@ public class MainWindow extends JInternalFrame {
 
 	JScrollPane tablePane;
 	JTable table;
+	EmployeeTableModel tableModel;
 
 	void build() {
 		buildMenuBar();
@@ -113,7 +115,8 @@ public class MainWindow extends JInternalFrame {
 		con.weightx = 1.0;
 		con.weighty = 1.0;
 
-		table = new JTable();
+		tableModel = new EmployeeTableModel(db);
+		table = new JTable(tableModel);
 
 		tablePane = new JScrollPane(table);
 		tablePane.setPreferredSize(new Dimension(tablePane.getPreferredSize().width, table.getPreferredSize().height));
@@ -173,24 +176,45 @@ public class MainWindow extends JInternalFrame {
 		JCheckBoxMenuItem column;
 
 		column = new JCheckBoxMenuItem("ID", true);
+		column.addItemListener((ItemEvent e) -> {
+			tableModel.setColumnVisibility(0, e.getStateChange() == ItemEvent.SELECTED);
+		});
 		columnsMenu.add(column);
 
 		column = new JCheckBoxMenuItem("First name", true);
+		column.addItemListener((ItemEvent e) -> {
+			tableModel.setColumnVisibility(1, e.getStateChange() == ItemEvent.SELECTED);
+		});
 		columnsMenu.add(column);
 
 		column = new JCheckBoxMenuItem("Last name", true);
+		column.addItemListener((ItemEvent e) -> {
+			tableModel.setColumnVisibility(2, e.getStateChange() == ItemEvent.SELECTED);
+		});
 		columnsMenu.add(column);
 
 		column = new JCheckBoxMenuItem("Gender", false);
+		column.addItemListener((ItemEvent e) -> {
+			tableModel.setColumnVisibility(3, e.getStateChange() == ItemEvent.SELECTED);
+		});
 		columnsMenu.add(column);
 
 		column = new JCheckBoxMenuItem("Location", true);
+		column.addItemListener((ItemEvent e) -> {
+			tableModel.setColumnVisibility(4, e.getStateChange() == ItemEvent.SELECTED);
+		});
 		columnsMenu.add(column);
 
 		column = new JCheckBoxMenuItem("Gross salary", true);
+		column.addItemListener((ItemEvent e) -> {
+			tableModel.setColumnVisibility(5, e.getStateChange() == ItemEvent.SELECTED);
+		});
 		columnsMenu.add(column);
 
 		column = new JCheckBoxMenuItem("Net salary", false);
+		column.addItemListener((ItemEvent e) -> {
+			tableModel.setColumnVisibility(6, e.getStateChange() == ItemEvent.SELECTED);
+		});
 		columnsMenu.add(column);
 	}
 
