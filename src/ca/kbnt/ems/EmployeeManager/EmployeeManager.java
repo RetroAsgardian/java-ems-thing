@@ -145,4 +145,7 @@ public class EmployeeManager {
 
     }
 
+    public int size() {
+        return table.size();
+    }
 }

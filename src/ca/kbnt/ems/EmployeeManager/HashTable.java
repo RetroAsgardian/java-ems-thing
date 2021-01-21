@@ -97,4 +97,11 @@ public class HashTable<T extends HashTable.IHashable> {
         return ret;
     }
 
+    public int size() {
+        int count = 0;
+        for (List<T> list : buckets) {
+            count += list.size();
+        }
+        return count;
+    }
 }
