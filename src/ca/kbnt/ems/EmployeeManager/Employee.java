@@ -41,23 +41,23 @@ public class Employee implements HashTable.IHashable {
 	// </editor-fold>
 
 	// <editor-fold desc="ATTRIBUTES">
-	private ca.kbnt.ems.EmployeeManager.EmployeeData data;
+	private EmployeeData data;
 	// </editor-fold>
 
 	// <editor-fold desc="CONSTRUCTORS">
 
-	public Employee(ca.kbnt.ems.EmployeeManager.EmployeeData data) {
-		this.data = new ca.kbnt.ems.EmployeeManager.EmployeeData(data);
+	public Employee(EmployeeData data) {
+		this.data = data.clone();
 	}
 	// </editor-fold>
 
-	public void setData(ca.kbnt.ems.EmployeeManager.EmployeeData data) {
+	public void setData(EmployeeData data) {
 		var oldData = data;
 		this.data = data.clone();
 		notifyDataChangedListeners(new DataChangedEvent(data, oldData, DataChangeOperation.Modified));
 	}
 
-	public ca.kbnt.ems.EmployeeManager.EmployeeData getData() {
+	public EmployeeData getData() {
 		return this.data.clone();
 	}
 
