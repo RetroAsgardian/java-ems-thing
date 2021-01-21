@@ -17,6 +17,15 @@ public class EmployeeTableModel extends AbstractTableModel {
 	
 	protected boolean[] columnMask = {true, true, true, false, true, true, false};
 	
+	public void setColumnVisibility(int column, boolean visible) {
+		if (column >= columnMask.length || column < 0)
+			return;
+		
+		columnMask[column] = visible;
+		enabledColumns = getEnabledColumns();
+		this.fireTableStructureChanged();
+	}
+	
 	protected EmployeeManager db;
 	
 	protected int[] enabledColumns;
@@ -45,8 +54,7 @@ public class EmployeeTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		// TODO Auto-generated method stub
-		return 1;
+		return db.size();
 	}
 
 	@Override
@@ -65,7 +73,7 @@ public class EmployeeTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
-		EmployeeData e = db.getEmployee(0).getData();
+		EmployeeData e = db.getEmployee(rowIndex).getData();
 		
 		if (columnIndex >= enabledColumns.length)
 			return null;
