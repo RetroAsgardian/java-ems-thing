@@ -2,7 +2,7 @@ package ca.kbnt.ems.EmployeeManager;
 
 import java.util.*;
 
-public class HashTable<T extends HashTable.IHashable> {
+public class HashTable<T extends HashTable.IHashable> implements Iterable<T> {
 
     public interface IHashable {
 
@@ -103,5 +103,49 @@ public class HashTable<T extends HashTable.IHashable> {
             count += list.size();
         }
         return count;
+    }
+
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            Iterator<List<T>> bucketsIterator = buckets.iterator();
+            Iterator<T> currentIterator = new Iterator<T>() {
+
+                @Override
+                public boolean hasNext() {
+                    return false;
+                }
+
+                @Override
+                public T next() {
+                    throw new NoSuchElementException();
+                }
+
+            };
+
+            @Override
+            public boolean hasNext() {
+                return seek();
+            }
+
+            @Override
+            public T next() {
+                if (!seek()) {
+                    throw new NoSuchElementException();
+                }
+                return currentIterator.next();
+            }
+
+            private boolean seek() {
+                while (!currentIterator.hasNext()) {
+                    if (!bucketsIterator.hasNext()) {
+                        return false;
+                    } else {
+                        currentIterator = bucketsIterator.next().iterator();
+                    }
+                }
+                return true;
+            }
+
+        };
     }
 }

@@ -1,6 +1,7 @@
 package ca.kbnt.ems.EmployeeManager;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,7 +10,7 @@ import java.util.logging.Logger;
  *
  * @author Kyle Benton
  */
-public class EmployeeManager {
+public class EmployeeManager implements Iterable<Employee> {
 
     // <editor-fold desc="EVENTS">
     // <editor-fold desc="DataChangedEvent">
@@ -147,5 +148,10 @@ public class EmployeeManager {
 
     public int size() {
         return table.size();
+    }
+
+    @Override
+    public Iterator<Employee> iterator() {
+        return table.iterator();
     }
 }
