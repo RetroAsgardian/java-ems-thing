@@ -113,7 +113,7 @@ public class MainWindow extends JInternalFrame {
 		con.weightx = 1.0;
 		con.weighty = 1.0;
 
-		table = new JTable();
+		table = new JTable(new EmployeeTableModel(db));
 
 		tablePane = new JScrollPane(table);
 		tablePane.setPreferredSize(new Dimension(tablePane.getPreferredSize().width, table.getPreferredSize().height));
