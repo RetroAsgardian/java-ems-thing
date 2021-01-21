@@ -46,10 +46,9 @@ public class MainWindow extends JInternalFrame {
 		data.setDeductRate(0.2);
 		data.setYearlySalary(10000.0);
 		emp.setData(data);
-		
+
 		emp = db.newEmployee();
 		emp.setData(new PTEmployeeData(emp.getID()));
-		
 
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -94,12 +93,12 @@ public class MainWindow extends JInternalFrame {
 
 					if (employee == null)
 						app.addWindow(new ActionDialog(app, "Error", "Employee not found", (ActionEvent e2) -> {
-						}), true);
+						}, null), true);
 					else
 						app.addWindow(new EmployeeWindow(app, db, employee));
 				} catch (NumberFormatException e1) {
 					app.addWindow(new ActionDialog(app, "Error", "Invalid ID", (ActionEvent e2) -> {
-					}), true);
+					}, null), true);
 				}
 			}), true);
 		});
@@ -119,19 +118,19 @@ public class MainWindow extends JInternalFrame {
 
 		tableModel = new EmployeeTableModel(db);
 		table = new JTable(tableModel);
-		
+
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() >= 2) {
 					int row = table.rowAtPoint(e.getPoint());
 					if (row < 0)
 						return;
-					
+
 					app.addWindow(new EmployeeWindow(app, db, db.getEmployee(tableModel.getIDAt(row))));
 				}
 			}
 		});
-		
+
 		table.setAutoCreateRowSorter(true);
 
 		tablePane = new JScrollPane(table);
