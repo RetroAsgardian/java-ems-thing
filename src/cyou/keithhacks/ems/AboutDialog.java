@@ -34,6 +34,11 @@ public class AboutDialog extends JInternalFrame {
 		this.add(new JLabel("By Keith and Kyle Benton"), con);
 		this.add(new JLabel("Made in 2021"), con);
 		this.add(new JLabel("Copyleft - all wrongs reserved"), con);
+		/*
+		this.add(new JLabel("By using this software, you certify that " +
+							"you are not Anish Kapoor, affiliated with " +
+							"Anish Kapoor, or using it on his behalf."), con);
+		*/
 	}
 	
 }

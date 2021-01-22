@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 import ca.kbnt.ems.EmployeeManager.Employee;
 import ca.kbnt.ems.EmployeeManager.EmployeeData;
 import ca.kbnt.ems.EmployeeManager.EmployeeData.Gender;
+import cyou.keithhacks.ems.query.Query;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
 
 public class EmployeeTableModel extends AbstractTableModel {
@@ -33,8 +34,11 @@ public class EmployeeTableModel extends AbstractTableModel {
 	
 	protected ArrayList<Integer> ids;
 	
+	protected Query query;
+	
 	public EmployeeTableModel(EmployeeManager db) {
 		this.db = db;
+		this.query = null;
 		
 		enabledColumns = getEnabledColumns();
 		refreshIDs();
@@ -48,9 +52,20 @@ public class EmployeeTableModel extends AbstractTableModel {
 	protected void refreshIDs() {
 		ids = new ArrayList<Integer>();
 		
-		for (Employee e: db) {
-			ids.add(e.getID());
-		}
+		if (query == null)
+			for (Employee e: db) {
+				ids.add(e.getID());
+			}
+		else
+			for (Employee e: db) {
+				if (query.matches(e))
+					ids.add(e.getID());
+			}
+	}
+	
+	protected void clearQuery() {
+		this.query = null;
+		refresh();
 	}
 	
 	protected int[] getEnabledColumns() {
