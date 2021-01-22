@@ -66,7 +66,7 @@ public class EmployeeManager implements Iterable<Employee> {
 
         for (var e : startingList) {
             try {
-                table.add(e);
+                addEmployee(e);
                 if (e.getID() > max) {
                     max = e.getID();
                 }
@@ -92,23 +92,19 @@ public class EmployeeManager implements Iterable<Employee> {
 
         table.add(emp);
         this.notifyDataChangedListeners(new DataChangedEvent(emp.getData(), null, DataChangeOperation.New));
-        emp.addDataChangedListener((e) -> {
-            this.notifyDataChangedListeners(e);
-        });
+        emp.addDataChangedListener(this::notifyDataChangedListeners);
     }
 
     public void removeEmployee(int ID) {
         var emp = table.remove(ID);
+        emp.removeDataChangedListener(this::notifyDataChangedListeners);
         if (emp != null) {
             this.notifyDataChangedListeners(new DataChangedEvent(null, emp.getData(), DataChangeOperation.Removed));
         }
     }
 
     public void removeEmployee(Employee e) {
-        var emp = table.remove(e);
-        if (emp != null) {
-            this.notifyDataChangedListeners(new DataChangedEvent(null, emp.getData(), DataChangeOperation.Removed));
-        }
+        removeEmployee(e.getID());
     }
 
     public Employee getEmployee(int ID) {
@@ -125,11 +121,7 @@ public class EmployeeManager implements Iterable<Employee> {
 
     public Employee newEmployee(EmployeeData data) throws HashTable.IDInUseError {
         Employee emp = new Employee(data);
-        table.add(emp);
-        this.notifyDataChangedListeners(new DataChangedEvent(emp.getData(), null, DataChangeOperation.New));
-        emp.addDataChangedListener((e) -> {
-            this.notifyDataChangedListeners(e);
-        });
+        addEmployee(emp);
         return emp;
     }
 
