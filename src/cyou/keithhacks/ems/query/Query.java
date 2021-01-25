@@ -1,46 +1,32 @@
 package cyou.keithhacks.ems.query;
 
+import java.util.ArrayList;
+
 import ca.kbnt.ems.EmployeeManager.EmployeeData;
 
-public abstract class Query {
+public class Query {
 	
-	public abstract boolean matches(EmployeeData e);
+	boolean matchAny;
+	ArrayList<QueryClause> clauses;
 	
-	public static enum QueryField {
-		ID("ID"),
-		FirstName("First name"),
-		LastName("Last name"),
-		Gender("Gender"),
-		Location("Location"),
-		DeductRate("Deduct rate"),
-		GrossSalary("Gross salary"),
-		NetSalary("Net salary");
+	public void reset() {
 		
-		private String label;
-		public String toString() {
-			return label;
-		}
-		private QueryField(String label) {
-			this.label = label;
-		}
 	}
 	
-	public static Class<? extends Query> getQueryTypeForField(QueryField field) {
-		switch (field) {
-		case ID:
-			return IDQuery.class;
-		case FirstName:
-		case LastName:
-		case Location:
-			return TextQuery.class;
-		case DeductRate:
-		case GrossSalary:
-		case NetSalary:
-			return DoubleQuery.class;
-		case Gender:
-			return GenderQuery.class;
+	public boolean matches(EmployeeData e) {
+		if (matchAny) {
+			for (QueryClause clause: clauses) {
+				if (clause.matches(e))
+					return true;
+			}
+			return false;
+		} else {
+			for (QueryClause clause: clauses) {
+				if (!clause.matches(e))
+					return false;
+			}
+			return true;
 		}
-		return null;
 	}
 	
 }

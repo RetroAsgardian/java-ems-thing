@@ -4,7 +4,7 @@ import java.util.regex.PatternSyntaxException;
 
 import ca.kbnt.ems.EmployeeManager.EmployeeData;
 
-public class TextQuery extends Query {
+public class TextQueryClause extends QueryClause {
 	
 	public static enum QueryType {
 		Equals("equals"),
@@ -43,7 +43,7 @@ public class TextQuery extends Query {
 	QueryField field;
 	QueryType type;
 	String str;
-	public TextQuery(QueryField field, QueryType type, String str) {
+	public TextQueryClause(QueryField field, QueryType type, String str) {
 		this.field = field;
 		this.type = type;
 		this.str = str;

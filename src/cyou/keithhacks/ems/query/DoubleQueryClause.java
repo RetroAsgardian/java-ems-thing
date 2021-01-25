@@ -2,7 +2,7 @@ package cyou.keithhacks.ems.query;
 
 import ca.kbnt.ems.EmployeeManager.EmployeeData;
 
-public class DoubleQuery extends Query {
+public class DoubleQueryClause extends QueryClause {
 	
 	public static enum QueryType {
 		Equals("equals"),
@@ -38,7 +38,7 @@ public class DoubleQuery extends Query {
 	QueryField field;
 	QueryType type;
 	double val;
-	public DoubleQuery(QueryField field, QueryType type, double val) {
+	public DoubleQueryClause(QueryField field, QueryType type, double val) {
 		this.field = field;
 		this.type = type;
 		this.val = val;

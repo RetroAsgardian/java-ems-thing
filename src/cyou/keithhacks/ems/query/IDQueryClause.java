@@ -2,7 +2,7 @@ package cyou.keithhacks.ems.query;
 
 import ca.kbnt.ems.EmployeeManager.EmployeeData;
 
-public class IDQuery extends Query {
+public class IDQueryClause extends QueryClause {
 	
 	public static enum QueryType {
 		Equals("equals"),
@@ -23,7 +23,7 @@ public class IDQuery extends Query {
 	
 	QueryType type;
 	int val;
-	public IDQuery(QueryType type, int val) {
+	public IDQueryClause(QueryType type, int val) {
 		this.type = type;
 		this.val = val;
 	}

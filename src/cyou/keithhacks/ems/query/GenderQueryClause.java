@@ -3,7 +3,7 @@ package cyou.keithhacks.ems.query;
 import ca.kbnt.ems.EmployeeManager.EmployeeData;
 import ca.kbnt.ems.EmployeeManager.EmployeeData.Gender;
 
-public class GenderQuery extends Query {
+public class GenderQueryClause extends QueryClause {
 	
 	public static enum QueryType {
 		Equals("equals"),
@@ -20,7 +20,7 @@ public class GenderQuery extends Query {
 	
 	QueryType type;
 	Gender val;
-	public GenderQuery(QueryType type, Gender val) {
+	public GenderQueryClause(QueryType type, Gender val) {
 		this.type = type;
 		this.val = val;
 	}
