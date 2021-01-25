@@ -62,8 +62,7 @@
             </goals>
             <configuration>
               <minimizeJar>true</minimizeJar>
-              <createDependencyReducedPom>true</createDependencyReducedPom>
-              <dependencyReducedPomLocation>dependency-reduced-pom.xml</dependencyReducedPomLocation>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
             </configuration>
           </execution>
         </executions>
