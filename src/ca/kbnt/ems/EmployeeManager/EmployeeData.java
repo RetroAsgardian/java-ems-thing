@@ -24,166 +24,181 @@ package ca.kbnt.ems.EmployeeManager;
 public class EmployeeData {
 
 	public enum Gender {
-    	/**
-    	 * @deprecated This is a legacy gender, and will be removed in a future release.
-    	 */
-    	Male,
-    	/**
-    	 * @deprecated This is a legacy gender, and will be removed in a future release.
-    	 */
-    	Female,
-    	NonBinary,
-    	SeaCaptain,
-    	Other,
-        Yes,
-        Definitely,
-        MostLikely,
-        No,
-        Maybe,
-        ProbablyNot,
-        GenderHazyTryAgain,
-        AskAgainLater,
-        /**
-         * My dear sir, there are individuals roaming the streets of Fallen London at this
-         * very moment with the faces of squid! Squid! Do you ask them their gender? And
-         * yet you waste our time asking me trifling and impertinent questions about mine?
-         * It is my own business, sir, and I bid you good day.
-         */
-        DoNotAskAgainEverYouHaveBeenWarned,
-        /**
-         * You wouldn't download a gender
-         */
-        Pirated,
-        Unknown
-    }
+		/**
+		 * @deprecated This is a legacy gender, and will be removed in a future release.
+		 */
+		Male,
+		/**
+		 * @deprecated This is a legacy gender, and will be removed in a future release.
+		 */
+		Female,
+		NonBinary("Non Binary"),
+		SeaCaptain("Sea Captain"),
+		Other,
+		Yes,
+		Definitely,
+		MostLikely("Most Likely"),
+		No,
+		Maybe,
+		ProbablyNot("Probably Not"),
+		GenderHazyTryAgain("Gender Hazy Try Again"),
+		AskAgainLater("Ask Again Later"),
+		/**
+		 * My dear sir, there are individuals roaming the streets of Fallen London at this
+		 * very moment with the faces of squid! Squid! Do you ask them their gender? And
+		 * yet you waste our time asking me trifling and impertinent questions about mine?
+		 * It is my own business, sir, and I bid you good day.
+		 */
+		DoNotAskAgainEverYouHaveBeenWarned("Do Not Ask Again Ever You Have Been Warned"),
+		/**
+		 * You wouldn't download a gender
+		 */
+		Pirated,
+		Unknown;
 
-    protected final int ID;
-    protected String firstName;
-    protected String lastName;
-    protected Gender gender;
-    protected double deductRate; // e.g. 0.21 for 21%
-    protected String location;
+		private final String label;
 
-    // public EmployeeData() {
-    // ID = 0;
-    // }
+		private Gender(String label) {
+			this.label = label;
+		}
 
-    public EmployeeData(int ID) {
-        this.ID = ID;
-        this.firstName = "";
-        this.lastName = "";
-        this.gender = Gender.Unknown;
-        this.deductRate = 0;
-        this.location = "";
-    }
+		private Gender() {
+			this.label = this.name();
+		}
 
-    public EmployeeData(int ID, String firstName, String lastName, Gender gender, double deductRate, String location) {
-        this.ID = ID;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.deductRate = deductRate;
-        this.location = location;
-    }
+		public String toString() {
+			return label;
+		}
+		
+	}
 
-    public EmployeeData(EmployeeData data) {
-        this.ID = data.ID;
-        this.firstName = data.firstName;
-        this.lastName = data.lastName;
-        this.gender = data.gender;
-        this.deductRate = data.deductRate;
-        this.location = data.location;
-    }
+	protected final int ID;
+	protected String firstName;
+	protected String lastName;
+	protected Gender gender;
+	protected double deductRate; // e.g. 0.21 for 21%
+	protected String location;
 
-    // <editor-fold desc="GETTERS AND SETTERS">
-    /**
-     * @return the ID
-     */
-    public int getID() {
-        return ID;
-    }
+	// public EmployeeData() {
+	// ID = 0;
+	// }
 
-    /**
-     * @return the firstName
-     */
-    public String getFirstName() {
-        return firstName;
-    }
+	public EmployeeData(int ID) {
+		this.ID = ID;
+		this.firstName = "";
+		this.lastName = "";
+		this.gender = Gender.Unknown;
+		this.deductRate = 0;
+		this.location = "";
+	}
 
-    /**
-     * @param firstName the firstName to set
-     */
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public EmployeeData(int ID, String firstName, String lastName, Gender gender, double deductRate, String location) {
+		this.ID = ID;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.gender = gender;
+		this.deductRate = deductRate;
+		this.location = location;
+	}
 
-    /**
-     * @return the lastName
-     */
-    public String getLastName() {
-        return lastName;
-    }
+	public EmployeeData(EmployeeData data) {
+		this.ID = data.ID;
+		this.firstName = data.firstName;
+		this.lastName = data.lastName;
+		this.gender = data.gender;
+		this.deductRate = data.deductRate;
+		this.location = data.location;
+	}
 
-    /**
-     * @param lastName the lastName to set
-     */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	// <editor-fold desc="GETTERS AND SETTERS">
+	/**
+	 * @return the ID
+	 */
+	public int getID() {
+		return ID;
+	}
 
-    /**
-     * @return the gender
-     */
-    public Gender getGender() {
-        return gender;
-    }
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
 
-    /**
-     * @param gender the gender to set
-     */
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    /**
-     * @return the deductRate
-     */
-    public double getDeductRate() {
-        return deductRate;
-    }
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
 
-    /**
-     * @param deductRate the deductRate to set
-     */
-    public void setDeductRate(double deductRate) {
-        this.deductRate = deductRate;
-    }
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    /**
-     * @return the location
-     */
-    public String getLocation() {
-        return location;
-    }
+	/**
+	 * @return the gender
+	 */
+	public Gender getGender() {
+		return gender;
+	}
 
-    /**
-     * @param location the location to set
-     */
-    public void setLocation(String location) {
-        this.location = location;
-    };
+	/**
+	 * @param gender the gender to set
+	 */
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
 
-    // </editor-fold>
+	/**
+	 * @return the deductRate
+	 */
+	public double getDeductRate() {
+		return deductRate;
+	}
 
-    public EmployeeData clone() {
-        return new EmployeeData(this);
-    }
+	/**
+	 * @param deductRate the deductRate to set
+	 */
+	public void setDeductRate(double deductRate) {
+		this.deductRate = deductRate;
+	}
 
-    public double calcAnnualGrossIncome() {
-        return calcAnnualNetIncome() * (1 - deductRate);
-    }
+	/**
+	 * @return the location
+	 */
+	public String getLocation() {
+		return location;
+	}
 
-    public double calcAnnualNetIncome() {
-        return 0;
-    }
+	/**
+	 * @param location the location to set
+	 */
+	public void setLocation(String location) {
+		this.location = location;
+	};
+
+	// </editor-fold>
+
+	public EmployeeData clone() {
+		return new EmployeeData(this);
+	}
+
+	public double calcAnnualGrossIncome() {
+		return calcAnnualNetIncome() * (1 - deductRate);
+	}
+
+	public double calcAnnualNetIncome() {
+		return 0;
+	}
 }
