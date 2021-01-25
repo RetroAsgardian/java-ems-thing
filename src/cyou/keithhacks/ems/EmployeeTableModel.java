@@ -58,7 +58,7 @@ public class EmployeeTableModel extends AbstractTableModel {
 			}
 		else
 			for (Employee e: db) {
-				if (query.matches(e))
+				if (query.matches(e.getData()))
 					ids.add(e.getID());
 			}
 	}
@@ -110,7 +110,6 @@ public class EmployeeTableModel extends AbstractTableModel {
 	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
 		EmployeeData e = db.getEmployee(getIDAt(rowIndex)).getData();
 		
 		if (columnIndex >= enabledColumns.length)

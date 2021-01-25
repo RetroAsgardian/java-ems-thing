@@ -83,6 +83,9 @@ public class MainWindow extends JInternalFrame {
 		con.weighty = 0.0;
 
 		addEmployeeBtn = new JButton("Add employee...");
+		addEmployeeBtn.addActionListener((ActionEvent e) -> {
+			app.addWindow(new AddEmployeeDialog(app, db), true);
+		});
 		this.add(addEmployeeBtn, con);
 
 		findByIDBtn = new JButton("Find by ID...");
@@ -93,13 +96,11 @@ public class MainWindow extends JInternalFrame {
 					Employee employee = db.getEmployee(ID);
 
 					if (employee == null)
-						app.addWindow(new ActionDialog(app, "Error", "Employee not found", (ActionEvent e2) -> {
-						}, Button.Ok), true);
+						app.addWindow(new InfoDialog(app, "Error", "Employee not found"), true);
 					else
 						app.addWindow(new EmployeeWindow(app, db, employee));
 				} catch (NumberFormatException e1) {
-					app.addWindow(new ActionDialog(app, "Error", "Invalid ID", (ActionEvent e2) -> {
-					}, Button.Ok), true);
+					app.addWindow(new InfoDialog(app, "Error", "Invalid ID"), true);
 				}
 			}), true);
 		});
