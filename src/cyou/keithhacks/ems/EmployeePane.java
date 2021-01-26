@@ -49,6 +49,12 @@ public class EmployeePane extends JPanel {
 		build();
 	}
 	
+	public void rebuild() {
+		this.data = employee.getData();
+		this.removeAll();
+		build();
+	}
+	
 	protected void build() {
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints con = new GridBagConstraints();

@@ -8,6 +8,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -50,6 +51,8 @@ public class Application extends JFrame {
 	JDesktopPane desktop;
 	
 	Hashtable<Integer, JInternalFrame> windows;
+	
+	JLabel status;
 	
 	void build() {
 		desktop = new JDesktopPane();
@@ -95,12 +98,22 @@ public class Application extends JFrame {
 		windowsMenu = (JMenu) menuBar.add(new JMenu("Windows"));
 		buildWindowsMenu();
 		
+		// make a gap
+		menuBar.add(new JLabel("  "));
+		
+		status = new JLabel("(no database open)");
+		status.setEnabled(false);
+		menuBar.add(status);
 		
 		this.setJMenuBar(menuBar);
 		
 		// Open main window
 		// addWindow(new MainWindow(this));
 		addWindow(new StartupWindow(this));
+	}
+	
+	public void setStatus(String text) {
+		status.setText(text);
 	}
 	
 	void buildLookAndFeelMenu() {

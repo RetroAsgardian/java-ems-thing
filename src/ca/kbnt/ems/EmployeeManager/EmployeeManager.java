@@ -25,8 +25,8 @@ public class EmployeeManager implements Iterable<Employee> {
 
     public static class DataChangedEvent {
 
-        final DataChangeOperation operation;
-        final EmployeeData newData, oldData;
+        public final DataChangeOperation operation;
+        public final EmployeeData newData, oldData;
 
         public DataChangedEvent(EmployeeData newData, EmployeeData oldData, DataChangeOperation change) {
             this.operation = change;

@@ -35,6 +35,8 @@ public class ActionDialog extends JInternalFrame {
 		build(defaultButton);
 
 		this.pack();
+		if (text.startsWith("<html>"))
+			this.setSize(getSize().width, getSize().height + 16);
 		this.setVisible(true);
 	}
 

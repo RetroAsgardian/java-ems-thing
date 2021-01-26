@@ -10,6 +10,11 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -20,6 +25,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import ca.kbnt.ems.DataFiles.FileData;
 import ca.kbnt.ems.EmployeeManager.Employee;
 import ca.kbnt.ems.EmployeeManager.EmployeeData.Gender;
 import cyou.keithhacks.ems.ActionDialog.Button;
@@ -46,7 +52,24 @@ public class MainWindow extends JInternalFrame {
 
 		this.db = db;
 		this.file = file;
-
+		
+		app.setStatus(this.file.getName() + " opened");
+		
+		db.addDataChangedListener((DataChangedEvent e) -> {
+			// TODO save in a separate thread
+			try {
+				FileOutputStream fh = new FileOutputStream(file, false);
+				FileData.writeData(fh, db);
+				fh.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				app.addWindow(new InfoDialog(app, "Error", "Failed to save database."), true);
+			}
+			
+			app.setStatus(this.file.getName() + " saved at " + LocalTime.now().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)));
+		});
+		
+		/*
 		Employee emp = db.newEmployee();
 		FTEmployeeData data = new FTEmployeeData(emp.getData());
 		data.setFirstName("Firstname");
@@ -58,6 +81,7 @@ public class MainWindow extends JInternalFrame {
 
 		emp = db.newEmployee();
 		emp.setData(new PTEmployeeData(emp.getID()));
+		*/
 
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -221,11 +245,8 @@ public class MainWindow extends JInternalFrame {
 		for (int i = 0; i < EmployeeTableModel.allColumns.length; i++) {
 			column = new JCheckBoxMenuItem(EmployeeTableModel.allColumns[i], tableModel.getColumnVisibility(i));
 			final int n = i;
-			column.addItemListener(new ItemListener() {
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					tableModel.setColumnVisibility(n, e.getStateChange() == ItemEvent.SELECTED);
-				}
+			column.addItemListener((ItemEvent e) -> {
+				tableModel.setColumnVisibility(n, e.getStateChange() == ItemEvent.SELECTED);
 			});
 			columnsMenu.add(column);
 		}
