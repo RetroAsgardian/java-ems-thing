@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -24,6 +25,7 @@ import cyou.keithhacks.ems.ActionDialog.Button;
 import cyou.keithhacks.ems.query.DoubleQueryClause;
 import cyou.keithhacks.ems.query.Query;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
+import ca.kbnt.ems.EmployeeManager.EmployeeManager.DataChangedEvent;
 import ca.kbnt.ems.EmployeeManager.FTEmployeeData;
 import ca.kbnt.ems.EmployeeManager.PTEmployeeData;
 
@@ -34,12 +36,15 @@ public class MainWindow extends JInternalFrame {
 	Application app;
 
 	EmployeeManager db;
+	
+	File file;
 
-	public MainWindow(Application app) {
+	public MainWindow(Application app, EmployeeManager db, File file) {
 		super("Employee Management System", true, false, true, true);
 		this.app = app;
 
-		db = new EmployeeManager();
+		this.db = db;
+		this.file = file;
 
 		Employee emp = db.newEmployee();
 		FTEmployeeData data = new FTEmployeeData(emp.getData());
@@ -81,7 +86,7 @@ public class MainWindow extends JInternalFrame {
 		con.anchor = GridBagConstraints.CENTER;
 		con.fill = GridBagConstraints.HORIZONTAL;
 		con.insets = new Insets(4, 4, 4, 4);
-		con.weightx = 0.0;
+		con.weightx = 0.01;
 		con.weighty = 0.0;
 
 		addEmployeeBtn = new JButton("Add employee...");
@@ -166,13 +171,13 @@ public class MainWindow extends JInternalFrame {
 		
 		menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
-
+		
 		fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
-
+		
 		fileMenu.add(new JMenuItem("New..."));
 		fileMenu.add(new JMenuItem("Export..."));
-
+		
 		editMenu = new JMenu("Edit");
 		menuBar.add(editMenu);
 		

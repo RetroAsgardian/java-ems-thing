@@ -69,6 +69,8 @@ public class Application extends JFrame {
 			
 			if (win instanceof MainWindow)
 				addWindow(new HelpWindow(this, "MainWindow.htm"));
+			else if (win instanceof EmployeeWindow)
+				addWindow(new HelpWindow(this, "EmployeeWindow.htm"));
 			else
 				addWindow(new HelpWindow(this));
 		});
@@ -97,8 +99,8 @@ public class Application extends JFrame {
 		this.setJMenuBar(menuBar);
 		
 		// Open main window
-		// addWindow(new OldMainWindow());
-		addWindow(new MainWindow(this));
+		// addWindow(new MainWindow(this));
+		addWindow(new StartupWindow(this));
 	}
 	
 	void buildLookAndFeelMenu() {
