@@ -11,6 +11,8 @@ public class HashTable<T extends HashTable.IHashable> implements Iterable<T> {
 
     public static class IDInUseError extends Exception {
 
+        private static final long serialVersionUID = -4818611969213859049L;
+
         IDInUseError(int ID) {
             super("ID " + ID + "is already in use.");
 
