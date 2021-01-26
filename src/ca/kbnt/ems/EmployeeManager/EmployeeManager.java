@@ -53,7 +53,7 @@ public class EmployeeManager implements Iterable<Employee> {
 
     // </editor-fold>
     // </editor-fold>
-    int nextID = 0;
+    int nextID = 1;
 
     final HashTable<Employee> table = new HashTable<>();
 
