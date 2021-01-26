@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -68,6 +70,14 @@ public class StartupWindow extends JInternalFrame {
 				return;
 			
 			File file = chooser.getSelectedFile();
+			if (!file.getName().contains(".")) {
+				try {
+					file = new File(new URI(file.toURI().toString() + ".edb"));
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 			
 			if (file.exists()) {
 				app.addWindow(new InfoDialog(app, "Error", "Cannot overwrite an existing database."), true);
@@ -111,7 +121,6 @@ public class StartupWindow extends JInternalFrame {
 			// open the db
 			EmployeeManager db;
 			try {
-				file.createNewFile();
 				FileInputStream fh = new FileInputStream(file);
 				db = new EmployeeManager(FileData.loadData(fh));
 				fh.close();
