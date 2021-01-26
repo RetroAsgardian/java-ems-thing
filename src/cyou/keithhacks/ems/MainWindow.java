@@ -21,6 +21,8 @@ import javax.swing.JTable;
 import ca.kbnt.ems.EmployeeManager.Employee;
 import ca.kbnt.ems.EmployeeManager.EmployeeData.Gender;
 import cyou.keithhacks.ems.ActionDialog.Button;
+import cyou.keithhacks.ems.query.DoubleQueryClause;
+import cyou.keithhacks.ems.query.Query;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
 import ca.kbnt.ems.EmployeeManager.FTEmployeeData;
 import ca.kbnt.ems.EmployeeManager.PTEmployeeData;
@@ -90,26 +92,23 @@ public class MainWindow extends JInternalFrame {
 
 		findByIDBtn = new JButton("Find by ID...");
 		findByIDBtn.addActionListener((ActionEvent e) -> {
-			app.addWindow(new TextInputDialog(app, "Find by ID", "Enter the desired employee's ID: ", (String str) -> {
-				try {
-					int ID = Integer.parseInt(str);
-					Employee employee = db.getEmployee(ID);
-
-					if (employee == null)
-						app.addWindow(new InfoDialog(app, "Error", "Employee not found"), true);
-					else
-						app.addWindow(new EmployeeWindow(app, db, employee));
-				} catch (NumberFormatException e1) {
-					app.addWindow(new InfoDialog(app, "Error", "Invalid ID"), true);
-				}
-			}), true);
+			doFindByID();
 		});
 		this.add(findByIDBtn, con);
 
 		searchBtn = new JButton("Search...");
+		searchBtn.addActionListener((ActionEvent e) -> {
+			Query q = new Query();
+			q.clauses.add(new DoubleQueryClause(DoubleQueryClause.QueryField.NetSalary, DoubleQueryClause.QueryType.GreaterOrEqual, 10000));
+			q.clauses.add(new DoubleQueryClause(DoubleQueryClause.QueryField.NetSalary, DoubleQueryClause.QueryType.Less, 20000));
+			tableModel.setQuery(q);
+		});
 		this.add(searchBtn, con);
 
 		showAllBtn = new JButton("Show all");
+		showAllBtn.addActionListener((ActionEvent e) -> {
+			tableModel.clearQuery();
+		});
 		this.add(showAllBtn, con);
 
 		con.gridx = 0;
@@ -139,6 +138,22 @@ public class MainWindow extends JInternalFrame {
 		tablePane.setPreferredSize(new Dimension(tablePane.getPreferredSize().width, table.getPreferredSize().height));
 		this.add(tablePane, con);
 	}
+	
+	private void doFindByID() {
+		app.addWindow(new TextInputDialog(app, "Find by ID", "Enter the desired employee's ID: ", (String str) -> {
+			try {
+				int ID = Integer.parseInt(str);
+				Employee employee = db.getEmployee(ID);
+
+				if (employee == null)
+					app.addWindow(new InfoDialog(app, "Error", "Employee not found"), true);
+				else
+					app.addWindow(new EmployeeWindow(app, db, employee));
+			} catch (NumberFormatException e1) {
+				app.addWindow(new InfoDialog(app, "Error", "Invalid ID"), true);
+			}
+		}), true);
+	}
 
 	JMenuBar menuBar;
 	JMenu fileMenu;
@@ -147,31 +162,31 @@ public class MainWindow extends JInternalFrame {
 	JMenu columnsMenu;
 
 	void buildMenuBar() {
+		JMenuItem item;
+		
 		menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
 
 		fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 
-		fileMenu.add(new JMenuItem("New"));
-		fileMenu.add(new JMenuItem("Open..."));
-		fileMenu.add(new JMenuItem("Save"));
-
-		fileMenu.addSeparator();
-
+		fileMenu.add(new JMenuItem("New..."));
 		fileMenu.add(new JMenuItem("Export..."));
 
 		editMenu = new JMenu("Edit");
 		menuBar.add(editMenu);
-
-		editMenu.add(new JMenuItem("Undo"));
-		editMenu.add(new JMenuItem("Redo"));
-		editMenu.add(new JMenuItem("Changelog..."));
-
-		editMenu.addSeparator();
-
-		editMenu.add(new JMenuItem("Add employee..."));
-		editMenu.add(new JMenuItem("Find by ID..."));
+		
+		item = new JMenuItem("Add employee...");
+		item.addActionListener((ActionEvent e) -> {
+			app.addWindow(new AddEmployeeDialog(app, db), true);
+		});
+		editMenu.add(item);
+		
+		item = new JMenuItem("Find by ID...");
+		item.addActionListener((ActionEvent e) -> {
+			doFindByID();
+		});
+		editMenu.add(item);
 
 		viewMenu = new JMenu("View");
 		menuBar.add(viewMenu);
@@ -184,7 +199,12 @@ public class MainWindow extends JInternalFrame {
 		viewMenu.addSeparator();
 
 		viewMenu.add(new JMenuItem("Search..."));
-		viewMenu.add(new JMenuItem("Show all"));
+		
+		item = new JMenuItem("Show all");
+		item.addActionListener((ActionEvent e) -> {
+			tableModel.clearQuery();
+		});
+		viewMenu.add(item);
 	}
 
 	void buildColumnsMenu() {

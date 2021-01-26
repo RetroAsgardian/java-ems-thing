@@ -68,8 +68,13 @@ public class EmployeeTableModel extends AbstractTableModel {
 			}
 	}
 	
-	protected void clearQuery() {
+	public void clearQuery() {
 		this.query = null;
+		refresh();
+	}
+	
+	public void setQuery(Query q) {
+		this.query = q;
 		refresh();
 	}
 	
@@ -91,7 +96,7 @@ public class EmployeeTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return db.size();
+		return ids.size();
 	}
 
 	@Override

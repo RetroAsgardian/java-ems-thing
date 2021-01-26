@@ -11,7 +11,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JInternalFrame;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 
@@ -55,7 +54,9 @@ public class AddEmployeeDialog extends JInternalFrame {
 		con.fill = GridBagConstraints.HORIZONTAL;
 		con.insets = new Insets(4, 4, 4, 4);
 		con.gridx = 0;
-		con.gridwidth = GridBagConstraints.REMAINDER;
+		
+		GridBagConstraints con2 = (GridBagConstraints) con.clone();
+		con2.gridx = 1;
 		
 		group = new ButtonGroup();
 		
@@ -66,13 +67,13 @@ public class AddEmployeeDialog extends JInternalFrame {
 		group.add(fullTime);
 		
 		this.add(partTime, con);
-		this.add(fullTime, con);
+		this.add(fullTime, con2);
 		
 		manualID = new JCheckBox("Manual ID", false);
 		this.add(manualID, con);
 		
 		manualIDField = new JSpinner(new SpinnerNumberModel(0, 0, 999999, 1));
-		this.add(manualIDField, con);
+		this.add(manualIDField, con2);
 		manualIDField.setEnabled(false);
 		
 		manualID.addChangeListener((ChangeEvent e) -> {
@@ -117,7 +118,7 @@ public class AddEmployeeDialog extends JInternalFrame {
 		cancel.addActionListener((ActionEvent e) -> {
 			this.doDefaultCloseAction();
 		});
-		this.add(cancel, con);
+		this.add(cancel, con2);
 		
 		this.getRootPane().setDefaultButton(ok);
 	}
