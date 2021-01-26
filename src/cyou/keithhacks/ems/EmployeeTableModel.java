@@ -14,55 +14,62 @@ import ca.kbnt.ems.EmployeeManager.EmployeeManager.DataChangedEvent;
 public class EmployeeTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 5537523222788811095L;
-	
-	private static final String[] allColumns = {"ID", "First name", "Last name", "Gender", "Location", "Gross salary", "Net salary"};
-	private static final Class<?>[] columnClasses = {Integer.class, String.class, String.class, Gender.class, String.class, Double.class, Double.class};
-	
-	protected boolean[] columnMask = {true, true, true, false, true, true, false};
-	
+
+	public static final String[] allColumns = { "ID", "First name", "Last name", "Gender", "Location", "Gross salary", "Net salary", "Deduct Rate" };
+	private static final Class<?>[] columnClasses = { Integer.class, String.class, String.class, Gender.class, String.class, Double.class, Double.class, Double.class };
+
+	protected boolean[] columnMask = { true, true, true, false, true, true, false, false };
+
 	public void setColumnVisibility(int column, boolean visible) {
 		if (column >= columnMask.length || column < 0)
 			return;
-		
+
 		columnMask[column] = visible;
 		enabledColumns = getEnabledColumns();
 		this.fireTableStructureChanged();
 	}
-	
+
+	public boolean getColumnVisibility(int column) {
+		if (column >= columnMask.length || column < 0)
+			return false;
+
+		return columnMask[column];
+	}
+
 	protected EmployeeManager db;
-	
+
 	protected int[] enabledColumns;
-	
+
 	protected ArrayList<Integer> ids;
-	
+
 	protected Query query;
-	
+
 	public EmployeeTableModel(EmployeeManager db) {
 		this.db = db;
 		this.query = null;
-		
+
 		enabledColumns = getEnabledColumns();
 		refreshIDs();
-		
+
 		db.addDataChangedListener((DataChangedEvent e) -> {
 			refresh();
 		});
 	}
-	
+
 	public void refresh() {
 		refreshIDs();
 		this.fireTableDataChanged();
 	}
-	
+
 	protected void refreshIDs() {
 		ids = new ArrayList<Integer>();
-		
+
 		if (query == null)
-			for (Employee e: db) {
+			for (Employee e : db) {
 				ids.add(e.getID());
 			}
 		else
-			for (Employee e: db) {
+			for (Employee e : db) {
 				if (query.matches(e.getData()))
 					ids.add(e.getID());
 			}
@@ -80,12 +87,12 @@ public class EmployeeTableModel extends AbstractTableModel {
 	
 	protected int[] getEnabledColumns() {
 		ArrayList<Integer> columns = new ArrayList<Integer>();
-		
+
 		for (int i = 0; i < allColumns.length; i++) {
 			if (columnMask[i])
 				columns.add(Integer.valueOf(i));
 		}
-		
+
 		// manual toArray because java is dumb
 		int[] array = new int[columns.size()];
 		for (int i = 0; i < columns.size(); i++) {
@@ -103,28 +110,28 @@ public class EmployeeTableModel extends AbstractTableModel {
 	public int getColumnCount() {
 		return enabledColumns.length;
 	}
-	
+
 	public String getColumnName(int column) {
 		return allColumns[enabledColumns[column]];
 	}
-	
+
 	/* Things that could have been
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		return !("ID".equals(allColumns[enabledColumns[columnIndex]]));
 	}
-	*/
-	
+	 */
+
 	public Class<?> getColumnClass(int column) {
 		return columnClasses[enabledColumns[column]];
 	}
-	
+
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		EmployeeData e = db.getEmployee(getIDAt(rowIndex)).getData();
-		
+
 		if (columnIndex >= enabledColumns.length)
 			return null;
-		
+
 		if ("ID".equals(allColumns[enabledColumns[columnIndex]]))
 			return Integer.valueOf(e.getID());
 		else if ("First name".equals(allColumns[enabledColumns[columnIndex]]))
@@ -139,10 +146,12 @@ public class EmployeeTableModel extends AbstractTableModel {
 			return e.calcAnnualGrossIncome();
 		else if ("Net salary".equals(allColumns[enabledColumns[columnIndex]]))
 			return e.calcAnnualNetIncome();
-		
+		else if ("Deduct Rate".equals(allColumns[enabledColumns[columnIndex]]))
+			return e.getDeductRate() * 100;
+
 		return null;
 	}
-	
+
 	public int getIDAt(int row) {
 		return ids.get(row).intValue();
 	}
