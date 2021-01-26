@@ -9,6 +9,7 @@ import ca.kbnt.ems.EmployeeManager.EmployeeData;
 import ca.kbnt.ems.EmployeeManager.EmployeeData.Gender;
 import cyou.keithhacks.ems.query.Query;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
+import ca.kbnt.ems.EmployeeManager.EmployeeManager.DataChangedEvent;
 
 public class EmployeeTableModel extends AbstractTableModel {
 
@@ -42,6 +43,10 @@ public class EmployeeTableModel extends AbstractTableModel {
 		
 		enabledColumns = getEnabledColumns();
 		refreshIDs();
+		
+		db.addDataChangedListener((DataChangedEvent e) -> {
+			refresh();
+		});
 	}
 	
 	public void refresh() {

@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 
 import ca.kbnt.ems.EmployeeManager.Employee;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
-import ca.kbnt.ems.EmployeeManager.FTEmployeeData;
 
 public class EmployeeWindow extends JInternalFrame {
 

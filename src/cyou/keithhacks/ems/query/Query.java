@@ -6,8 +6,13 @@ import ca.kbnt.ems.EmployeeManager.EmployeeData;
 
 public class Query {
 	
-	boolean matchAny;
-	ArrayList<QueryClause> clauses;
+	public boolean matchAny;
+	public ArrayList<QueryClause> clauses;
+	
+	public Query() {
+		this.matchAny = false;
+		this.clauses = new ArrayList<QueryClause>();
+	}
 	
 	public void reset() {
 		

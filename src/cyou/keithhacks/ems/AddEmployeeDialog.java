@@ -16,7 +16,11 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 
 import ca.kbnt.ems.EmployeeManager.Employee;
+import ca.kbnt.ems.EmployeeManager.EmployeeData;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager;
+import ca.kbnt.ems.EmployeeManager.FTEmployeeData;
+import ca.kbnt.ems.EmployeeManager.HashTable.IDInUseError;
+import ca.kbnt.ems.EmployeeManager.PTEmployeeData;
 
 public class AddEmployeeDialog extends JInternalFrame {
 	private static final long serialVersionUID = 8799398506096026449L;
@@ -77,6 +81,34 @@ public class AddEmployeeDialog extends JInternalFrame {
 		
 		ok = new JButton("OK");
 		ok.addActionListener((ActionEvent e) -> {
+			int id;
+			if (manualID.isSelected())
+				id = ((Integer) manualIDField.getValue()).intValue();
+			else
+				id = db.generateID();
+			
+			if (!db.checkVacantID(id)) {
+				app.addWindow(new InfoDialog(app, "Error", "Employee ID is already taken"), true);
+				return;
+			}
+			
+			EmployeeData data;
+			if (partTime.isSelected())
+				data = new PTEmployeeData(id);
+			else
+				data = new FTEmployeeData(id);
+			
+			// TODO don't actually add the employee till they're saved
+			Employee emp = new Employee(data);
+			try {
+				db.addEmployee(emp);
+			} catch (IDInUseError e1) {
+				app.addWindow(new InfoDialog(app, "Error", "Employee ID is already taken"), true);
+				return;
+			}
+			
+			app.addWindow(new EmployeeWindow(app, db, emp));
+			
 			this.doDefaultCloseAction();
 		});
 		this.add(ok, con);
