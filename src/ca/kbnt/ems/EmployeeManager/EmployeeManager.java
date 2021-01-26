@@ -1,8 +1,8 @@
 package ca.kbnt.ems.EmployeeManager;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +35,7 @@ public class EmployeeManager implements Iterable<Employee> {
         }
     }
 
-    private final List<DataChangedEventListener> dataChangedListeners = new ArrayList<>();
+    private final List<DataChangedEventListener> dataChangedListeners = new CopyOnWriteArrayList<>();
 
     public void addDataChangedListener(DataChangedEventListener l) {
         dataChangedListeners.add(l);

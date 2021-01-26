@@ -1,7 +1,7 @@
 package ca.kbnt.ems.EmployeeManager;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import ca.kbnt.ems.EmployeeManager.EmployeeManager.DataChangeOperation;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager.DataChangedEvent;
@@ -21,7 +21,7 @@ public class Employee implements HashTable.IHashable {
 	// <editor-fold desc="EVENTS">
 	// <editor-fold desc="DataChangedEvent">
 
-	private final List<DataChangedEventListener> dataChangedListeners = new ArrayList<>();
+	private final List<DataChangedEventListener> dataChangedListeners = new CopyOnWriteArrayList<>();
 
 	public void addDataChangedListener(DataChangedEventListener l) {
 		dataChangedListeners.add(l);
