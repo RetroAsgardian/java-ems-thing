@@ -67,13 +67,7 @@ public class HashTable<T extends HashTable.IHashable> implements Iterable<T> {
     }
 
     public T remove(int ID) {
-        for (T s : this.buckets.get(doHash(ID))) {
-            if (ID == s.getID()) {
-                this.buckets.get(doHash(ID)).remove(s);
-                return s;
-            }
-        }
-        return null;
+        return remove(get(ID));
     }
 
     public T remove(T objToRemove) {
