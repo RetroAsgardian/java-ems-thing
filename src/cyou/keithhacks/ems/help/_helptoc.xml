@@ -2,5 +2,5 @@
 <helptoc>
 	<help name="Welcome" href="Welcome.htm" />
 	<help name="The Main Window" href="MainWindow.htm" />
-	<help name="The Employee Editor" href="EmployeeWindow.htm" />
+	<help name="The Employee Window" href="EmployeeWindow.htm" />
 </helptoc>
