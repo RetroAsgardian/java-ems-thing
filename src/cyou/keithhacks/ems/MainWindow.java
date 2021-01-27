@@ -156,8 +156,7 @@ public class MainWindow extends JInternalFrame {
 					int row = table.rowAtPoint(e.getPoint());
 					if (row < 0)
 						return;
-
-					app.addWindow(new EmployeeWindow(app, db, db.getEmployee(tableModel.getIDAt(row)).getData()));
+					app.addWindow(new EmployeeWindow(app, db, db.getEmployee(tableModel.getIDAt(table.getRowSorter().convertRowIndexToModel(row))).getData()));
 				}
 			}
 		});
