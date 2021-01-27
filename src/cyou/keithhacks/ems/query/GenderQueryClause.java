@@ -18,8 +18,8 @@ public class GenderQueryClause extends QueryClause {
 		}
 	}
 	
-	QueryType type;
-	Gender val;
+	public QueryType type;
+	public Gender val;
 	public GenderQueryClause(QueryType type, Gender val) {
 		this.type = type;
 		this.val = val;

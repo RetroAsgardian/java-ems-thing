@@ -21,8 +21,8 @@ public class IDQueryClause extends QueryClause {
 		}
 	}
 	
-	QueryType type;
-	int val;
+	public QueryType type;
+	public int val;
 	public IDQueryClause(QueryType type, int val) {
 		this.type = type;
 		this.val = val;

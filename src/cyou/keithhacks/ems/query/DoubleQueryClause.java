@@ -35,9 +35,9 @@ public class DoubleQueryClause extends QueryClause {
 		}
 	}
 	
-	QueryField field;
-	QueryType type;
-	double val;
+	public QueryField field;
+	public QueryType type;
+	public double val;
 	public DoubleQueryClause(QueryField field, QueryType type, double val) {
 		this.field = field;
 		this.type = type;

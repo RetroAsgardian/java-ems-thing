@@ -131,10 +131,11 @@ public class MainWindow extends JInternalFrame {
 
 		searchBtn = new JButton("Search...");
 		searchBtn.addActionListener((ActionEvent e) -> {
-			Query q = new Query();
-			q.clauses.add(new DoubleQueryClause(DoubleQueryClause.QueryField.NetSalary, DoubleQueryClause.QueryType.GreaterOrEqual, 10000));
-			q.clauses.add(new DoubleQueryClause(DoubleQueryClause.QueryField.NetSalary, DoubleQueryClause.QueryType.Less, 20000));
-			tableModel.setQuery(q);
+			// Query q = new Query();
+			// q.clauses.add(new DoubleQueryClause(DoubleQueryClause.QueryField.NetSalary, DoubleQueryClause.QueryType.GreaterOrEqual, 10000));
+			// q.clauses.add(new DoubleQueryClause(DoubleQueryClause.QueryField.NetSalary, DoubleQueryClause.QueryType.Less, 20000));
+			// tableModel.setQuery(q);
+			app.addWindow(new QueryWindow(app, tableModel), true);
 		});
 		this.add(searchBtn, con);
 

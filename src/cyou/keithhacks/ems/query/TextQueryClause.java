@@ -40,9 +40,9 @@ public class TextQueryClause extends QueryClause {
 		}
 	}
 	
-	QueryField field;
-	QueryType type;
-	String str;
+	public QueryField field;
+	public QueryType type;
+	public String str;
 	public TextQueryClause(QueryField field, QueryType type, String str) {
 		this.field = field;
 		this.type = type;
