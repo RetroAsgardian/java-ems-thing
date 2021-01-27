@@ -43,7 +43,7 @@ public class MainWindow extends JInternalFrame {
 	Application app;
 
 	EmployeeManager db;
-	
+
 	File file;
 
 	public MainWindow(Application app, EmployeeManager db, File file) {
@@ -52,9 +52,9 @@ public class MainWindow extends JInternalFrame {
 
 		this.db = db;
 		this.file = file;
-		
+
 		app.setStatus(this.file.getName() + " opened");
-		
+
 		db.addDataChangedListener((DataChangedEvent e) -> {
 			// TODO save in a separate thread
 			try {
@@ -65,10 +65,10 @@ public class MainWindow extends JInternalFrame {
 				e1.printStackTrace();
 				app.addWindow(new InfoDialog(app, "Error", "Failed to save database."), true);
 			}
-			
+
 			app.setStatus(this.file.getName() + " saved at " + LocalTime.now().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)));
 		});
-		
+
 		/*
 		Employee emp = db.newEmployee();
 		FTEmployeeData data = new FTEmployeeData(emp.getData());
@@ -81,7 +81,7 @@ public class MainWindow extends JInternalFrame {
 
 		emp = db.newEmployee();
 		emp.setData(new PTEmployeeData(emp.getID()));
-		*/
+		 */
 
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -157,7 +157,7 @@ public class MainWindow extends JInternalFrame {
 					if (row < 0)
 						return;
 
-					app.addWindow(new EmployeeWindow(app, db, db.getEmployee(tableModel.getIDAt(row))));
+					app.addWindow(new EmployeeWindow(app, db, db.getEmployee(tableModel.getIDAt(row)).getData()));
 				}
 			}
 		});
@@ -168,7 +168,7 @@ public class MainWindow extends JInternalFrame {
 		tablePane.setPreferredSize(new Dimension(tablePane.getPreferredSize().width, table.getPreferredSize().height));
 		this.add(tablePane, con);
 	}
-	
+
 	private void doFindByID() {
 		app.addWindow(new TextInputDialog(app, "Find by ID", "Enter the desired employee's ID: ", (String str) -> {
 			try {
@@ -178,7 +178,7 @@ public class MainWindow extends JInternalFrame {
 				if (employee == null)
 					app.addWindow(new InfoDialog(app, "Error", "Employee not found"), true);
 				else
-					app.addWindow(new EmployeeWindow(app, db, employee));
+					app.addWindow(new EmployeeWindow(app, db, employee.getData()));
 			} catch (NumberFormatException e1) {
 				app.addWindow(new InfoDialog(app, "Error", "Invalid ID"), true);
 			}
@@ -193,25 +193,25 @@ public class MainWindow extends JInternalFrame {
 
 	void buildMenuBar() {
 		JMenuItem item;
-		
+
 		menuBar = new JMenuBar();
 		this.setJMenuBar(menuBar);
-		
+
 		fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
-		
+
 		fileMenu.add(new JMenuItem("New..."));
 		fileMenu.add(new JMenuItem("Export..."));
-		
+
 		editMenu = new JMenu("Edit");
 		menuBar.add(editMenu);
-		
+
 		item = new JMenuItem("Add employee...");
 		item.addActionListener((ActionEvent e) -> {
 			app.addWindow(new AddEmployeeDialog(app, db), true);
 		});
 		editMenu.add(item);
-		
+
 		item = new JMenuItem("Find by ID...");
 		item.addActionListener((ActionEvent e) -> {
 			doFindByID();
@@ -229,7 +229,7 @@ public class MainWindow extends JInternalFrame {
 		viewMenu.addSeparator();
 
 		viewMenu.add(new JMenuItem("Search..."));
-		
+
 		item = new JMenuItem("Show all");
 		item.addActionListener((ActionEvent e) -> {
 			tableModel.clearQuery();

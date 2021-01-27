@@ -23,30 +23,31 @@ import ca.kbnt.ems.EmployeeManager.PTEmployeeData;
 
 public class AddEmployeeDialog extends JInternalFrame {
 	private static final long serialVersionUID = 8799398506096026449L;
-	
+
 	Application app;
 	EmployeeManager db;
+
 	public AddEmployeeDialog(Application app, EmployeeManager db) {
 		super("Create new...", false, true, false, false);
-		
+
 		this.app = app;
 		this.db = db;
-		
+
 		build();
-		
+
 		this.pack();
 		this.setVisible(true);
 	}
-	
+
 	ButtonGroup group;
 	JRadioButton partTime;
 	JRadioButton fullTime;
 	JCheckBox manualID;
 	JSpinner manualIDField;
-	
+
 	JButton ok;
 	JButton cancel;
-	
+
 	public void build() {
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints con = new GridBagConstraints();
@@ -54,32 +55,32 @@ public class AddEmployeeDialog extends JInternalFrame {
 		con.fill = GridBagConstraints.HORIZONTAL;
 		con.insets = new Insets(4, 4, 4, 4);
 		con.gridx = 0;
-		
+
 		GridBagConstraints con2 = (GridBagConstraints) con.clone();
 		con2.gridx = 1;
-		
+
 		group = new ButtonGroup();
-		
+
 		partTime = new JRadioButton("Part-time employee", false);
 		fullTime = new JRadioButton("Full-time employee", true);
-		
+
 		group.add(partTime);
 		group.add(fullTime);
-		
+
 		this.add(partTime, con);
 		this.add(fullTime, con2);
-		
+
 		manualID = new JCheckBox("Manual ID", false);
 		this.add(manualID, con);
-		
+
 		manualIDField = new JSpinner(new SpinnerNumberModel(0, 0, 999999, 1));
 		this.add(manualIDField, con2);
 		manualIDField.setEnabled(false);
-		
+
 		manualID.addChangeListener((ChangeEvent e) -> {
 			manualIDField.setEnabled(manualID.isSelected());
 		});
-		
+
 		ok = new JButton("OK");
 		ok.addActionListener((ActionEvent e) -> {
 			int id;
@@ -87,39 +88,35 @@ public class AddEmployeeDialog extends JInternalFrame {
 				id = ((Integer) manualIDField.getValue()).intValue();
 			else
 				id = db.generateID();
-			
+
 			if (!db.checkVacantID(id)) {
 				app.addWindow(new InfoDialog(app, "Error", "Employee ID is already taken"), true);
 				return;
 			}
-			
+
 			EmployeeData data;
 			if (partTime.isSelected())
 				data = new PTEmployeeData(id);
 			else
 				data = new FTEmployeeData(id);
-			
-			// TODO don't actually add the employee till they're saved
-			Employee emp = new Employee(data);
-			try {
-				db.addEmployee(emp);
-			} catch (IDInUseError e1) {
+
+			if (!db.checkVacantID(data.getID())) {
 				app.addWindow(new InfoDialog(app, "Error", "Employee ID is already taken"), true);
 				return;
 			}
-			
-			app.addWindow(new EmployeeWindow(app, db, emp));
-			
+
+			app.addWindow(new EmployeeWindow(app, db, data));
+
 			this.doDefaultCloseAction();
 		});
 		this.add(ok, con);
-		
+
 		cancel = new JButton("Cancel");
 		cancel.addActionListener((ActionEvent e) -> {
 			this.doDefaultCloseAction();
 		});
 		this.add(cancel, con2);
-		
+
 		this.getRootPane().setDefaultButton(ok);
 	}
 }

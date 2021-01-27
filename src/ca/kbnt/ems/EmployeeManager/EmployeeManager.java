@@ -85,6 +85,7 @@ public class EmployeeManager implements Iterable<Employee> {
         while (!this.checkVacantID(ID)) {
             ID++;
         }
+        this.nextID = ID + 1;
         return ID;
     }
 
