@@ -72,7 +72,7 @@ public class FTEmployeeData extends EmployeeData {
     }
 
     @Override
-    public double calcAnnualNetIncome() {
+    public double calcAnnualGrossIncome() {
         return yearlySalary;
     }
 

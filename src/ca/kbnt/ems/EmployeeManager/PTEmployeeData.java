@@ -86,7 +86,7 @@ public class PTEmployeeData extends EmployeeData {
     }
 
     @Override
-    public double calcAnnualNetIncome() {
+    public double calcAnnualGrossIncome() {
         return hourlyWage * hoursPerWeek * weeksPerYear;
     }
 }

@@ -194,11 +194,11 @@ public class EmployeeData {
 		return new EmployeeData(this);
 	}
 
-	public double calcAnnualGrossIncome() {
-		return calcAnnualNetIncome() * (1 - deductRate);
+	public double calcAnnualNetIncome() {
+		return calcAnnualGrossIncome() * (1 - deductRate);
 	}
 
-	public double calcAnnualNetIncome() {
+	public double calcAnnualGrossIncome() {
 		return 0;
 	}
 }
