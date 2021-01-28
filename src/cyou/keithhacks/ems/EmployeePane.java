@@ -274,6 +274,7 @@ public class EmployeePane extends JPanel {
 		this.dataEdited = false;
 		employee.setData(data);
 		notifyEditListeners(false);
+		// HACK prevent notifyEditListeners() from setting it back to true
 		this.dataEdited = false;
 	}
 
