@@ -12,18 +12,23 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ca.kbnt.ems.DataFiles.FileData;
 import ca.kbnt.ems.EmployeeManager.Employee;
@@ -196,7 +201,59 @@ public class MainWindow extends JInternalFrame {
 		fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 		
-		fileMenu.add(new JMenuItem("Export..."));
+		item = new JMenuItem("Export...");
+		item.addActionListener((ActionEvent e) -> {
+			int[] rows = table.getSelectedRows();
+			if (rows.length == 0) {
+				app.addWindow(new InfoDialog(app, "Error", "No employees selected"), true);
+				return;
+			}
+			
+			ArrayList<Employee> exportList = new ArrayList<Employee>();
+			for (int i = 0; i < rows.length; i++) {
+				int id = tableModel.getIDAt(table.getRowSorter().convertRowIndexToModel(rows[i]));
+				exportList.add(db.getEmployee(id));
+			}
+			
+			// Choose the file to export to
+			JFileChooser chooser = new JFileChooser();
+			chooser.setDialogTitle("Export to...");
+			
+			FileNameExtensionFilter jsonFilter = new FileNameExtensionFilter("JSON files (*.json)", "json");
+			chooser.addChoosableFileFilter(jsonFilter);
+			chooser.setAcceptAllFileFilterUsed(true);
+			chooser.setFileFilter(jsonFilter);
+			
+			int result = chooser.showSaveDialog(this);
+			if (result != JFileChooser.APPROVE_OPTION)
+				return;
+			
+			File file = chooser.getSelectedFile();
+			if (!file.getName().contains(".")) {
+				try {
+					file = new File(new URI(file.toURI().toString() + ".json"));
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+			// export the employees
+			try {
+				file.createNewFile();
+				FileOutputStream fh = new FileOutputStream(file, false);
+				FileData.exportData(fh, exportList);
+				fh.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				app.addWindow(new InfoDialog(app, "Error", "Unable to export."), true);
+				return;
+			}
+			
+			// Success dialog
+			app.addWindow(new InfoDialog(app, "Export", "Exported "+Integer.toString(exportList.size())+" employees to "+file.getName()+"."), true);
+		});
+		fileMenu.add(item);
 
 		editMenu = new JMenu("Edit");
 		menuBar.add(editMenu);
