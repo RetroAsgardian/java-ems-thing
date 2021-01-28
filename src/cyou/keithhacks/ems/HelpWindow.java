@@ -35,6 +35,8 @@ public class HelpWindow extends JInternalFrame {
 
 		build();
 
+		System.out.println(id);
+
 		Topic t = findByID(id);
 
 		if (t == null) {
