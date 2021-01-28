@@ -251,7 +251,7 @@ public class MainWindow extends JInternalFrame {
 			}
 			
 			// Success dialog
-			app.addWindow(new InfoDialog(app, "Export", "Exported "+Integer.toString(exportList.size())+" employees to "+file.getName()+"."), true);
+			app.addWindow(new InfoDialog(app, "Export", "Exported "+Integer.toString(exportList.size())+" employee"+(exportList.size() == 1 ? " to " : "s to ")+file.getName()+"."), true);
 		});
 		fileMenu.add(item);
 
