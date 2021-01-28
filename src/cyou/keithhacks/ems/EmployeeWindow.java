@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
@@ -163,8 +164,11 @@ public class EmployeeWindow extends JInternalFrame {
 					}, ActionDialog.Button.Cancel), true);
 		});
 		bottom.add(convert);
+		
+		// spacing hack
+		bottom.add(new JLabel("   "));
 
-		cancel = new JButton("Cancel");
+		cancel = new JButton("Close");
 		cancel.addActionListener((ActionEvent e) -> {
 			this.doDefaultCloseAction();
 		});
