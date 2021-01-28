@@ -1,6 +1,5 @@
 package cyou.keithhacks.ems;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -19,7 +18,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 
+import ca.kbnt.ems.EmployeeManager.EmployeeData.Gender;
 import cyou.keithhacks.ems.query.DoubleQueryClause;
+import cyou.keithhacks.ems.query.GenderQueryClause;
 import cyou.keithhacks.ems.query.IDQueryClause;
 import cyou.keithhacks.ems.query.Query;
 import cyou.keithhacks.ems.query.QueryClause;
@@ -64,6 +65,8 @@ public class QueryWindow extends JInternalFrame {
 	JPanel clausesPanel;
 	JButton addBtn;
 	JButton removeBtn;
+	JButton okBtn;
+	JButton cancelBtn;
 	
 	void build() {
 		this.setLayout(new GridBagLayout());
@@ -109,17 +112,37 @@ public class QueryWindow extends JInternalFrame {
 		addBtn = new JButton("+");
 		addBtn.addActionListener((ActionEvent e) -> {
 			query.clauses.add(new IDQueryClause(IDQueryClause.QueryType.Equals, 0));
+			removeBtn.setEnabled(true);
 			rebuild();
 		});
 		addRemoveContainer.add(addBtn);
 		
 		removeBtn = new JButton("-");
+		removeBtn.setEnabled(false);
 		removeBtn.addActionListener((ActionEvent e) -> {
-			if (query.clauses.size() > 0)
+			if (query.clauses.size() > 1)
 				query.clauses.remove(query.clauses.size() - 1);
+			removeBtn.setEnabled(query.clauses.size() > 1);
 			rebuild();
 		});
 		addRemoveContainer.add(removeBtn);
+		
+		JPanel okCancelContainer = new JPanel();
+		okCancelContainer.setLayout(new FlowLayout());
+		this.add(okCancelContainer, gbc);
+
+		cancelBtn = new JButton("Cancel");
+		cancelBtn.addActionListener((ActionEvent e) -> {
+			this.doDefaultCloseAction();
+		});
+		okCancelContainer.add(cancelBtn);
+		
+		okBtn = new JButton("OK");
+		okBtn.addActionListener((ActionEvent e) -> {
+			model.setQuery(query);
+			this.doDefaultCloseAction();
+		});
+		okCancelContainer.add(okBtn);
 	}
 	
 	void buildClauses() {
@@ -214,6 +237,28 @@ public class QueryWindow extends JInternalFrame {
 					doubleClause.val = ((Double) value.getValue()).doubleValue();
 				});
 				clausesPanel.add(value, gbc2);
+			} else if (clause instanceof GenderQueryClause) {
+				GenderQueryClause genderClause = (GenderQueryClause) clause;
+				
+				JComboBox<GenderQueryClause.QueryType> type = new JComboBox<GenderQueryClause.QueryType>(GenderQueryClause.QueryType.class.getEnumConstants());
+				type.setSelectedItem(genderClause.type);
+				type.addItemListener((ItemEvent e) -> {
+					if (e.getStateChange() != ItemEvent.SELECTED)
+						return;
+					
+					genderClause.type = (GenderQueryClause.QueryType) type.getSelectedItem();
+				});
+				clausesPanel.add(type, gbc);
+				
+				JComboBox<Gender> gender = new JComboBox<Gender>(Gender.class.getEnumConstants());
+				gender.setSelectedItem(genderClause.val);
+				gender.addItemListener((ItemEvent e) -> {
+					if (e.getStateChange() != ItemEvent.SELECTED)
+						return;
+					
+					genderClause.val = (Gender) gender.getSelectedItem();
+				});
+				clausesPanel.add(gender, gbc2);
 			} else {
 				clausesPanel.add(new JLabel("(internal error)"), gbc2);
 			}
