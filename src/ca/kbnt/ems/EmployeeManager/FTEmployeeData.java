@@ -42,7 +42,7 @@ public class FTEmployeeData extends EmployeeData {
 
     public FTEmployeeData(EmployeeData data) {
         super(data);
-        this.yearlySalary = data.calcAnnualNetIncome();
+        this.yearlySalary = data.calcAnnualGrossIncome();
         // if (data instanceof FTEmployeeData) {
         // var ftdata = (FTEmployeeData) data;
         // this.yearlySalary = ftdata.yearlySalary;
