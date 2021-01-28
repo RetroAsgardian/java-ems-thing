@@ -1,6 +1,6 @@
-<?xml version="1.0"?> 
+<?xml version="1.0"?>
 <helptoc>
-	<help name="Welcome" href="Welcome.htm" />
-	<help name="The Main Window" href="MainWindow.htm" />
-	<help name="The Employee Window" href="EmployeeWindow.htm" />
+	<help name="Welcome" href="Welcome.htm" id="default" />
+	<help name="The Main Window" href="MainWindow.htm" id="cyou.keithhacks.ems.MainWindow" />
+	<help name="The Employee Window" href="EmployeeWindow.htm" id="cyou.keithhacks.ems.EmployeeWindow" />
 </helptoc>

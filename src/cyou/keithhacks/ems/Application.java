@@ -22,60 +22,56 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 
 public class Application extends JFrame {
 	private static final long serialVersionUID = -2429084325927720912L;
-	
+
 	SoundEffects soundEffects;
-	
+
 	public Application() {
 		super();
-		
+
 		soundEffects = SoundEffects.get();
-		
+
 		this.setTitle("EMS");
 		this.setSize(960, 640);
 		// this.setMinimumSize(new Dimension(960, 640));
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+
 		windows = new Hashtable<Integer, JInternalFrame>();
-		
+
 		build();
-		
+
 		this.setVisible(true);
 	}
-	
+
 	JMenuBar menuBar;
 	JMenu applicationMenu;
 	JMenu windowsMenu;
-	
+
 	JMenu lookAndFeelMenu;
-	
+
 	JDesktopPane desktop;
-	
+
 	Hashtable<Integer, JInternalFrame> windows;
-	
+
 	JLabel status;
-	
+
 	void build() {
 		desktop = new JDesktopPane();
 		desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
 		this.add(desktop);
-		
+
 		// Build menu bar
 		menuBar = new JMenuBar();
-		
+
 		applicationMenu = (JMenu) menuBar.add(new JMenu("Application"));
-		
+
 		JMenuItem help = new JMenuItem("Help...");
 		help.addActionListener((ActionEvent e) -> {
 			JInternalFrame win = desktop.getSelectedFrame();
 			if (win.isIcon())
 				win = null;
-			
-			if (win instanceof MainWindow)
-				addWindow(new HelpWindow(this, "MainWindow.htm"));
-			else if (win instanceof EmployeeWindow)
-				addWindow(new HelpWindow(this, "EmployeeWindow.htm"));
-			else
-				addWindow(new HelpWindow(this));
+
+			addWindow(new HelpWindow(this, win.getClass().getTypeName()));
+
 		});
 		applicationMenu.add(help);
 		JMenuItem about = new JMenuItem("About...");
@@ -84,38 +80,38 @@ public class Application extends JFrame {
 		});
 		applicationMenu.add(about);
 		applicationMenu.addSeparator();
-		
+
 		lookAndFeelMenu = new JMenu("Set Look and Feel");
 		buildLookAndFeelMenu();
 		applicationMenu.add(lookAndFeelMenu);
-		
+
 		JMenuItem quit = new JMenuItem("Quit");
 		quit.addActionListener((ActionEvent e) -> {
 			dispose();
 		});
 		applicationMenu.add(quit);
-		
+
 		windowsMenu = (JMenu) menuBar.add(new JMenu("Windows"));
 		buildWindowsMenu();
-		
+
 		// make a gap
 		menuBar.add(new JLabel("  "));
-		
+
 		status = new JLabel("(no database open)");
 		status.setEnabled(false);
 		menuBar.add(status);
-		
+
 		this.setJMenuBar(menuBar);
-		
+
 		// Open main window
 		// addWindow(new MainWindow(this));
 		addWindow(new StartupWindow(this));
 	}
-	
+
 	public void setStatus(String text) {
 		status.setText(text);
 	}
-	
+
 	void buildLookAndFeelMenu() {
 		lookAndFeelMenu.removeAll();
 		for (UIManager.LookAndFeelInfo lafInfo : UIManager.getInstalledLookAndFeels()) {
@@ -136,26 +132,27 @@ public class Application extends JFrame {
 			lookAndFeelMenu.add(menuItem);
 		}
 	}
-	
+
 	void buildWindowsMenu() {
 		// Clear
 		windowsMenu.removeAll();
-		
+
 		// Fallback if no windows are open
 		if (windows.size() == 0) {
-			windowsMenu.add(new JMenuItem("(no windows open)")).setEnabled(false);;
+			windowsMenu.add(new JMenuItem("(no windows open)")).setEnabled(false);
+			;
 			return;
 		}
-		
+
 		// getAllFrames() returns in stacking order
 		for (JInternalFrame window : desktop.getAllFrames()) {
 			int windowID = window.hashCode();
-			
+
 			JMenu windowMenu = new JMenu(window.getTitle());
-			
+
 			windowMenu.add(new JMenuItem(Integer.toString(windowID))).setEnabled(false);
 			windowMenu.addSeparator();
-			
+
 			JMenuItem close = new JMenuItem("Close");
 			close.setEnabled(window.isClosable());
 			close.addActionListener((ActionEvent e) -> {
@@ -166,7 +163,7 @@ public class Application extends JFrame {
 				}
 			});
 			windowMenu.add(close);
-			
+
 			JMenuItem iconify = new JMenuItem(window.isIcon() ? "Restore" : "Iconify");
 			iconify.setEnabled(window.isIconifiable());
 			iconify.addActionListener((ActionEvent e) -> {
@@ -177,7 +174,7 @@ public class Application extends JFrame {
 				}
 			});
 			windowMenu.add(iconify);
-			
+
 			JMenuItem focus = new JMenuItem("Focus");
 			focus.addActionListener((ActionEvent e) -> {
 				try {
@@ -191,7 +188,7 @@ public class Application extends JFrame {
 				}
 			});
 			windowMenu.add(focus);
-			
+
 			JMenuItem raise = new JMenuItem(desktop.getComponentZOrder(window) == 0 ? "Lower" : "Raise");
 			raise.addActionListener((ActionEvent e) -> {
 				if (desktop.getComponentZOrder(window) == 0)
@@ -201,39 +198,43 @@ public class Application extends JFrame {
 				buildWindowsMenu();
 			});
 			windowMenu.add(raise);
-			
+
 			windowsMenu.add(windowMenu);
 		}
 	}
-	
+
 	public long addWindow(JInternalFrame window, boolean isDialog) {
 		int windowID = window.hashCode();
-		
+
 		// register window
 		windows.put(windowID, window);
 		desktop.add(window);
-		
+
 		// make sure removeWindow() is called, among other things
 		window.addInternalFrameListener(new InternalFrameAdapter() {
 			public void internalFrameClosed(InternalFrameEvent e) {
 				removeWindow(windowID, isDialog);
 			}
+
 			public void internalFrameIconified(InternalFrameEvent e) {
 				buildWindowsMenu();
 				soundEffects.play(soundEffects.iconify);
 			}
+
 			public void internalFrameDeiconified(InternalFrameEvent e) {
 				buildWindowsMenu();
 				soundEffects.play(soundEffects.deiconify);
 			}
+
 			public void internalFrameActivated(InternalFrameEvent e) {
 				buildWindowsMenu();
 			}
+
 			public void internalFrameDeactivated(InternalFrameEvent e) {
 				buildWindowsMenu();
 			}
 		});
-		
+
 		soundEffects.play(isDialog ? soundEffects.dialogOpen : soundEffects.open);
 
 		try {
@@ -245,33 +246,33 @@ public class Application extends JFrame {
 		} catch (PropertyVetoException e) {
 			e.printStackTrace();
 		}
-		
+
 		buildWindowsMenu();
-		
+
 		return windowID;
 	}
-	
+
 	public long addWindow(JInternalFrame window) {
 		return addWindow(window, false);
 	}
-	
+
 	public void removeWindow(int windowID, boolean isDialog) {
 		JInternalFrame window = windows.get(Integer.valueOf(windowID));
 		if (window == null)
 			return;
-		
+
 		windows.remove(Integer.valueOf(windowID));
 		desktop.remove(window);
-		
+
 		soundEffects.play(isDialog ? soundEffects.dialogClose : soundEffects.close);
-		
+
 		buildWindowsMenu();
 	}
-	
+
 	public void removeWindow(int windowID) {
 		removeWindow(windowID, false);
 	}
-	
+
 	public static void main(String[] args) {
 		// Configure default Metal theme
 		MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
@@ -282,7 +283,7 @@ public class Application extends JFrame {
 				| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
-		
+
 		// Use the following theme if available:
 		String preferredThemeName = "Nimbus";
 		for (UIManager.LookAndFeelInfo lafInfo : UIManager.getInstalledLookAndFeels()) {
@@ -295,9 +296,9 @@ public class Application extends JFrame {
 				e.printStackTrace();
 			}
 		}
-		
+
 		@SuppressWarnings("unused")
 		Application app = new Application();
 	}
-	
+
 }
