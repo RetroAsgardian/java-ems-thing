@@ -271,9 +271,9 @@ public class EmployeePane extends JPanel {
 	}
 
 	public void saveChanges(Employee employee) {
-		this.dataEdited = false;
 		employee.setData(data);
 		notifyEditListeners(false);
+		this.dataEdited = false;
 	}
 
 }
