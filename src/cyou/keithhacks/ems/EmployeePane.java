@@ -187,13 +187,14 @@ public class EmployeePane extends JPanel {
 
 			data.setGender((Gender) gender.getSelectedItem());
 			notifyEditListeners(validateState());
-
+			/*
 			if (data.getGender() == Gender.Male || data.getGender() == Gender.Female) {
 				app.addWindow(
 						new InfoDialog(app, "Warning",
 								"Male and Female are deprecated genders, and will be removed in a future release."),
 						true);
 			}
+			*/
 		});
 		this.add(gender, con2);
 

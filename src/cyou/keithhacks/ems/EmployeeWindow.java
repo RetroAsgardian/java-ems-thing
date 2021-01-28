@@ -16,7 +16,9 @@ import ca.kbnt.ems.EmployeeManager.EmployeeManager;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager.DataChangeOperation;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager.DataChangedEvent;
 import ca.kbnt.ems.EmployeeManager.EmployeeManager.DataChangedEventListener;
+import ca.kbnt.ems.EmployeeManager.FTEmployeeData;
 import ca.kbnt.ems.EmployeeManager.HashTable.IDInUseError;
+import ca.kbnt.ems.EmployeeManager.PTEmployeeData;
 import cyou.keithhacks.ems.ActionDialog.Button;
 
 public class EmployeeWindow extends JInternalFrame {
@@ -100,6 +102,7 @@ public class EmployeeWindow extends JInternalFrame {
 	JButton cancel;
 	JButton save;
 	JButton delete;
+	JButton convert;
 
 	void build() {
 		this.setLayout(new BorderLayout());
@@ -110,6 +113,56 @@ public class EmployeeWindow extends JInternalFrame {
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new FlowLayout());
 		this.add(bottom, BorderLayout.SOUTH);
+
+		delete = new JButton("Delete");
+
+		if (db.checkVacantID(data.getID())) {
+			delete.setEnabled(false);
+		} else {
+			delete.setEnabled(true);
+		}
+
+		delete.addActionListener((ActionEvent e) -> {
+			app.addWindow(new ActionDialog(app, "Confirm deletion", "<html>Really delete employee "
+					+ Integer.toString(data.getID()) + "? <b>This action cannot be undone.</b></html>",
+					(ActionEvent e1) -> {
+						db.removeEmployee(data.getID());
+						this.doDefaultCloseAction();
+					}, ActionDialog.Button.Cancel), true);
+		});
+		bottom.add(delete);
+		
+		convert = new JButton("Convert");
+		convert.addActionListener((ActionEvent e) -> {
+			app.addWindow(new ActionDialog(app, "Confirm conversion",
+					"Really convert employee " + Integer.toString(data.getID()) + " to a "
+					+ ((data instanceof FTEmployeeData) ? "part-time" : "full-time") + " employee? Data may be lost.",
+					(ActionEvent e1) -> {
+						// Get the employee or create a dummy one (but don't add it to the DB)
+						Employee emp;
+						if (!db.checkVacantID(data.getID()))
+							emp = db.getEmployee(data.getID());
+						else
+							emp = new Employee(data);
+						
+						// save changes so we don't get a weird "thing was modified reload it" popup
+						pane.saveChanges(emp);
+						
+						// Do conversion
+						if (data instanceof FTEmployeeData)
+							data = new PTEmployeeData(data);
+						else
+							data = new FTEmployeeData(data);
+						
+						emp.setData(data);
+						
+						pane.rebuild(data);
+						save.setEnabled(false);
+						this.pack();
+						this.setMinimumSize(this.getSize());
+					}, ActionDialog.Button.Cancel), true);
+		});
+		bottom.add(convert);
 
 		cancel = new JButton("Cancel");
 		cancel.addActionListener((ActionEvent e) -> {
@@ -136,24 +189,6 @@ public class EmployeeWindow extends JInternalFrame {
 			pane.saveChanges(employee);
 		});
 		bottom.add(save);
-
-		delete = new JButton("Delete");
-
-		if (db.checkVacantID(data.getID())) {
-			delete.setEnabled(false);
-		} else {
-			delete.setEnabled(true);
-		}
-
-		delete.addActionListener((ActionEvent e) -> {
-			app.addWindow(new ActionDialog(app, "Confirm deletion", "<html>Really delete employee "
-					+ Integer.toString(data.getID()) + "? <b>This action cannot be undone.</b></html>",
-					(ActionEvent e1) -> {
-						db.removeEmployee(data.getID());
-						this.doDefaultCloseAction();
-					}, ActionDialog.Button.Cancel), true);
-		});
-		bottom.add(delete);
 
 		pane.addEditListener((data, canSave) -> {
 			save.setEnabled(canSave);
