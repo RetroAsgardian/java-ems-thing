@@ -70,7 +70,27 @@ public class Application extends JFrame {
 			if (win.isIcon())
 				win = null;
 
-			addWindow(new HelpWindow(this, win.getClass().getTypeName()));
+			HelpWindow helpWindow = null;
+			for (var i : windows.entrySet()) {
+				var f = i.getValue();
+				if (f instanceof HelpWindow) {
+					helpWindow = (HelpWindow) f;
+					break;
+				}
+			}
+			if (helpWindow == null)
+				addWindow(new HelpWindow(this, win.getClass().getTypeName()));
+			else {
+				helpWindow.openByID(win.getClass().getTypeName());
+				try {
+					helpWindow.setSelected(true);
+					win.setSelected(false);
+					desktop.setSelectedFrame(helpWindow);
+				} catch (PropertyVetoException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 
 		});
 		applicationMenu.add(help);

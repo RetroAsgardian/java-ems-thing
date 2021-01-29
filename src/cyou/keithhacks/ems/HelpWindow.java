@@ -35,15 +35,9 @@ public class HelpWindow extends JInternalFrame {
 
 		build();
 
-		System.out.println(id);
-
-		Topic t = findByID(id);
-
-		if (t == null) {
-			updateDocument("Welcome.htm");
-		} else {
-			updateDocument(t.file);
-		}
+		// System.out.println(id);
+		updateDocument("Welcome.htm");
+		openByID(id);
 
 		this.pack();
 		this.setSize(600, 400);
@@ -152,6 +146,14 @@ public class HelpWindow extends JInternalFrame {
 			contentPane.setText("<html><body><h1>Error</h1><p>Unable to open the requested help topic.</p><p>Path: "
 					+ url.toString() + "</p></body></html>");
 		}
+	}
+
+	void openByID(String id) {
+		if ("".equals(id))
+			return;
+		var top = findByID(id);
+		if (top != null)
+			updateDocument(top.file);
 	}
 
 	Topic findByID(String id) {
