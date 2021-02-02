@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -156,7 +157,7 @@ public class EmployeePane extends JPanel {
 	JTextField firstName;
 	JTextField lastName;
 	JComboBox<Gender> gender;
-	JTextField location;
+	JComboBox<String> location;
 	JSpinner deductRate;
 
 	JTextField netSalary;
@@ -211,12 +212,21 @@ public class EmployeePane extends JPanel {
 		
 		locationLabel = new JLabel("Location");
 		this.add(locationLabel, con);
-
+		
+		/*
 		location = new JTextField(data.getLocation());
 		location.getDocument().addDocumentListener(new SimpleDocListener((DocumentEvent e) -> {
 			data.setLocation(location.getText());
 			notifyEditListeners(validateState());
 		}));
+		*/
+		location = new JComboBox<String>(new String[] {"Mississauga","Toronto"});
+		location.setEditable(true);
+		location.setSelectedItem(data.getLocation());
+		location.addActionListener((ActionEvent e) -> {
+			data.setLocation((String) location.getSelectedItem());
+			notifyEditListeners(validateState());
+		});
 		this.add(location, con2);
 		
 		this.add(new JLabel("Deduct rate"), con);
@@ -260,7 +270,8 @@ public class EmployeePane extends JPanel {
 			valid = false;
 		}
 
-		if (location.getDocument().getLength() <= 0) {
+		// if (location.getDocument().getLength() <= 0) {
+		if (((String) location.getSelectedItem()).length() <= 0) {
 			locationLabel.setForeground(new Color(0xff0000));
 			valid = false;
 		}
