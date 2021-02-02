@@ -1,5 +1,6 @@
 package cyou.keithhacks.ems;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -41,6 +42,7 @@ public class EmployeePane extends JPanel {
 		this.editListeners = new ArrayList<EditListener>();
 
 		build();
+		validateState();
 	}
 
 	public void rebuild(EmployeeData data) {
@@ -48,6 +50,7 @@ public class EmployeePane extends JPanel {
 		this.dataEdited = false;
 		this.removeAll();
 		build();
+		validateState();
 	}
 
 	protected void build() {
@@ -84,8 +87,9 @@ public class EmployeePane extends JPanel {
 
 		} else if (data instanceof PTEmployeeData) {
 			PTEmployeeData ptdata = (PTEmployeeData) data;
-
-			this.add(new JLabel("Hourly wage"), con);
+			
+			hourlyWageLabel = new JLabel("Hourly wage");
+			this.add(hourlyWageLabel, con);
 
 			JSpinner hourlyWage = new JSpinner(new SpinnerNumberModel(ptdata.getHourlyWage(), 0.0, null, 0.5));
 			hourlyWage.addChangeListener((ChangeEvent e) -> {
@@ -157,9 +161,15 @@ public class EmployeePane extends JPanel {
 
 	JTextField netSalary;
 	JTextField grossSalary;
-
+	
+	JLabel firstNameLabel;
+	JLabel lastNameLabel;
+	JLabel locationLabel;
+	JLabel hourlyWageLabel;
+	
 	protected void buildCommon(GridBagConstraints con, GridBagConstraints con2) {
-		this.add(new JLabel("First name"), con);
+		firstNameLabel = new JLabel("First name");
+		this.add(firstNameLabel, con);
 
 		firstName = new JTextField(data.getFirstName());
 		firstName.getDocument().addDocumentListener(new SimpleDocListener((DocumentEvent e) -> {
@@ -167,8 +177,9 @@ public class EmployeePane extends JPanel {
 			notifyEditListeners(validateState());
 		}));
 		this.add(firstName, con2);
-
-		this.add(new JLabel("Last name"), con);
+		
+		lastNameLabel = new JLabel("Last name");
+		this.add(lastNameLabel, con);
 
 		lastName = new JTextField(data.getLastName());
 		lastName.getDocument().addDocumentListener(new SimpleDocListener((DocumentEvent e) -> {
@@ -176,7 +187,7 @@ public class EmployeePane extends JPanel {
 			notifyEditListeners(validateState());
 		}));
 		this.add(lastName, con2);
-
+		
 		this.add(new JLabel("Gender"), con);
 
 		gender = new JComboBox<Gender>(Gender.class.getEnumConstants());
@@ -197,8 +208,9 @@ public class EmployeePane extends JPanel {
 			*/
 		});
 		this.add(gender, con2);
-
-		this.add(new JLabel("Location"), con);
+		
+		locationLabel = new JLabel("Location");
+		this.add(locationLabel, con);
 
 		location = new JTextField(data.getLocation());
 		location.getDocument().addDocumentListener(new SimpleDocListener((DocumentEvent e) -> {
@@ -206,7 +218,7 @@ public class EmployeePane extends JPanel {
 			notifyEditListeners(validateState());
 		}));
 		this.add(location, con2);
-
+		
 		this.add(new JLabel("Deduct rate"), con);
 
 		JPanel deductRatePanel = new JPanel();
@@ -234,20 +246,34 @@ public class EmployeePane extends JPanel {
 	}
 
 	public boolean validateState() {
-		if (firstName.getDocument().getLength() <= 0)
-			return false;
-		if (lastName.getDocument().getLength() <= 0)
-			return false;
-
-		if (location.getDocument().getLength() <= 0)
-			return false;
-
-		if (data instanceof PTEmployeeData) {
-			if (((PTEmployeeData) data).getHourlyWage() < 15.0)
-				return false;
+		boolean valid = true;
+		firstNameLabel.setForeground(new Color(0x000000));
+		lastNameLabel.setForeground(new Color(0x000000));
+		locationLabel.setForeground(new Color(0x000000));
+		
+		if (firstName.getDocument().getLength() <= 0) {
+			firstNameLabel.setForeground(new Color(0xff0000));
+			valid = false;
+		}
+		if (lastName.getDocument().getLength() <= 0) {
+			lastNameLabel.setForeground(new Color(0xff0000));
+			valid = false;
 		}
 
-		return true;
+		if (location.getDocument().getLength() <= 0) {
+			locationLabel.setForeground(new Color(0xff0000));
+			valid = false;
+		}
+
+		if (data instanceof PTEmployeeData) {
+			hourlyWageLabel.setForeground(new Color(0x000000));
+			if (((PTEmployeeData) data).getHourlyWage() < 15.0) {
+				hourlyWageLabel.setForeground(new Color(0xff0000));
+				valid = false;
+			}
+		}
+
+		return valid;
 	}
 
 	public boolean getEdited() {
