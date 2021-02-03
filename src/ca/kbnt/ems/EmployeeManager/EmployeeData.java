@@ -32,7 +32,7 @@ public class EmployeeData {
 		 * @deprecated This is a legacy gender, and will be removed in a future release.
 		 */
 		Female,
-		NonBinary("Non Binary"),
+		NonBinary("Non-Binary"),
 		SeaCaptain("Sea Captain"),
 		Other,
 		Yes,
